@@ -6,8 +6,7 @@ void main() {
 }
 
 class DemoModel {
-  const DemoModel(this.id, this.name, this.value1, this.value2, this.value3,
-      this.value4, this.value5, this.value6);
+  const DemoModel(this.id, this.name, this.value1, this.value2, this.value3, this.value4, this.value5, this.value6);
   final int id;
   final String name;
   final String value1;
@@ -54,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SpargoTable<DemoModel>(
-              maxHeight: 460,
+              maxHeight: 472,
               data: List.generate(
                 10,
                 (index) => DemoModel(

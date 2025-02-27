@@ -25,8 +25,7 @@ class SpargoTableViewModel<T> {
   final Map<int, ValueNotifier<String?>> queryFilters = {};
   final ValueNotifier<List<T>?> filteredDataNotifier = ValueNotifier(null);
   final ValueNotifier<List<T>?> sortedDataNotifier = ValueNotifier(null);
-  final ValueNotifier<SpargoSortModel?> sortColumnNotifier =
-      ValueNotifier(null);
+  final ValueNotifier<SpargoSortModel?> sortColumnNotifier = ValueNotifier(null);
 
   final ValueNotifier<double?> heightRowNotifier = ValueNotifier(null);
 
@@ -36,26 +35,32 @@ class SpargoTableViewModel<T> {
   final GlobalKey tableKey = GlobalKey();
   final GlobalKey headerKey = GlobalKey();
 
-  final ValueNotifier<double?> maxHeight = ValueNotifier(null);
-  final ValueNotifier<double?> maxWidth = ValueNotifier(null);
+  final ValueNotifier<double?> maxHeightNotifier = ValueNotifier(null);
+  final ValueNotifier<double?> maxWidthNotifier = ValueNotifier(null);
 
   BoxConstraints? get currentConstraints => _currentConstraints;
   BoxConstraints? _currentConstraints;
   List<double>? get currentColumnWidths => _currentColumnWidths;
   List<double>? _currentColumnWidths;
-  double? heightHeader;
+  double? get heightHeader => _heightHeader;
+  double? _heightHeader;
+
+  final ValueNotifier<bool> isDisplayedHorizontalScrollNotifier = ValueNotifier(false);
 
   void destroy() {
     for (final notifiers in queryFilters.values) {
       notifiers.dispose();
     }
+    columnWidthsNotifier.dispose();
     filteredDataNotifier.dispose();
     sortColumnNotifier.dispose();
     heightRowNotifier.dispose();
+    sortedDataNotifier.dispose();
     verticalScrollController.dispose();
     horizontalScrollController.dispose();
-    maxHeight.dispose();
-    maxWidth.dispose();
+    maxHeightNotifier.dispose();
+    maxWidthNotifier.dispose();
+    isDisplayedHorizontalScrollNotifier.dispose();
   }
 
   void init() {
@@ -68,9 +73,16 @@ class SpargoTableViewModel<T> {
     }
     columnWidthsNotifier.value = columnWidths;
     _calculateSelectedRowIndex();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setIsDisplayedHorizontalScroll();
+    });
   }
 
-  void setCurrentConstaints(BoxConstraints constraints) {
+  void setIsDisplayedHorizontalScroll() {
+    isDisplayedHorizontalScrollNotifier.value = horizontalScrollController.position.maxScrollExtent > 0;
+  }
+
+  void setCurrentConstraints(BoxConstraints constraints) {
     _currentConstraints = constraints;
   }
 
@@ -94,8 +106,8 @@ class SpargoTableViewModel<T> {
     if (sortColumnNotifier.value == null) return;
     List<T> newSortedData = [...(filteredDataNotifier.value ?? data)];
     newSortedData.sort(
-      (a, b) => configuration.columns[sortColumnNotifier.value!.columnIndex]
-          .sortBy!(a, b, sortColumnNotifier.value!.type),
+      (a, b) =>
+          configuration.columns[sortColumnNotifier.value!.columnIndex].sortBy!(a, b, sortColumnNotifier.value!.type),
     );
     sortedDataNotifier.value = newSortedData;
   }
@@ -116,8 +128,7 @@ class SpargoTableViewModel<T> {
     bool anyFilter = false;
     for (int i = 0; i < configuration.columns.length; i++) {
       if (queryFilters.containsKey(i) && queryFilters[i]!.value != null) {
-        final buffer = newFilteredData.where((e) =>
-            configuration.columns[i].queryFilter!(queryFilters[i]!.value!, e));
+        final buffer = newFilteredData.where((e) => configuration.columns[i].queryFilter!(queryFilters[i]!.value!, e));
         newFilteredData = buffer;
         anyFilter = true;
       }
@@ -143,6 +154,7 @@ class SpargoTableViewModel<T> {
     _resizeColumnIndex = null;
     _startColumnWidth = null;
     startMousePosition = null;
+    setIsDisplayedHorizontalScroll();
   }
 
   void onMoveResizeColumn(PointerMoveEvent event, int index) {
@@ -162,8 +174,7 @@ class SpargoTableViewModel<T> {
   }
 
   void _calculateSelectedRowIndex() {
-    final resultData =
-        sortedDataNotifier.value ?? filteredDataNotifier.value ?? data;
+    final resultData = sortedDataNotifier.value ?? filteredDataNotifier.value ?? data;
     for (int i = 0; i < resultData.length; i++) {
       final item = resultData[i];
       if (item == selectedRow) {
@@ -180,15 +191,12 @@ class SpargoTableViewModel<T> {
 
   void setSizes() {
     final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
-    final renderBoxHeader =
-        headerKey.currentContext?.findRenderObject() as RenderBox?;
-    heightHeader = renderBoxHeader?.size.height;
-    if (heightHeader == null) return;
-    maxHeight.value = renderBox!.size.height - heightHeader!;
-    maxWidth.value = renderBox.size.width;
+    final renderBoxHeader = headerKey.currentContext?.findRenderObject() as RenderBox?;
+    _heightHeader = renderBoxHeader?.size.height;
+    if (_heightHeader == null) return;
+    maxHeightNotifier.value = renderBox!.size.height - _heightHeader!;
+    maxWidthNotifier.value = renderBox.size.width;
   }
 
-  double get tableWidth =>
-      columnWidthsNotifier.value.reduce((a, b) => a + b) +
-      17 * (configuration.columns.length);
+  double get tableWidth => columnWidthsNotifier.value.reduce((a, b) => a + b) + 17 * (configuration.columns.length);
 }
