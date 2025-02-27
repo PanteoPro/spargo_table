@@ -1,7 +1,6 @@
 name: spargo_table
 description: "Spargo table"
 version: 0.0.1
-author: Spargo Technologies Kostya Griva <kn_griva@protek.ru>
 homepage: https://github.com/PanteoPro/spargo_table
 
 environment:
