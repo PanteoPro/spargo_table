@@ -11,7 +11,7 @@ class SpargoTableViewModelProvider<T> extends InheritedWidget {
     final vm = context
         .dependOnInheritedWidgetOfExactType<SpargoTableViewModelProvider<T>>()
         ?.vm;
-    assert(vm == null, 'Не найден SpargoTableViewModel');
+    assert(vm != null, 'Не найден SpargoTableViewModel');
     return vm!;
   }
 
