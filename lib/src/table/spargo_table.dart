@@ -84,7 +84,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
 
   double get tableWidth =>
       vm.columnWidthsNotifier.value.reduce((a, b) => a + b) +
-      17 * (widget.configuration.columns.length - 1);
+      17 * (widget.configuration.columns.length);
 
   BoxConstraints? _savedConstraints;
   List<double>? _savedColumnWidths;

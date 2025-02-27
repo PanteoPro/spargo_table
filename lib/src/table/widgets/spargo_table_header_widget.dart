@@ -49,7 +49,7 @@ class SpargoTableHeaderWidget<T> extends StatelessWidget {
                   index: index,
                   decorationConfig: decorationConfig,
                 ),
-                if (index < columns.length - 1)
+                if (index < columns.length)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2),
                     child: MouseRegion(
