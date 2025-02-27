@@ -30,6 +30,54 @@ class SpargoTableViewModel<T> {
 
   final ValueNotifier<double?> heightRowNotifier = ValueNotifier(null);
 
+  final verticalScrollController = ScrollController();
+  final horizontalScrollController = ScrollController();
+
+  final GlobalKey tableKey = GlobalKey();
+  final GlobalKey headerKey = GlobalKey();
+
+  final ValueNotifier<double?> maxHeight = ValueNotifier(null);
+  final ValueNotifier<double?> maxWidth = ValueNotifier(null);
+
+  BoxConstraints? get currentConstraints => _currentConstraints;
+  BoxConstraints? _currentConstraints;
+  List<double>? get currentColumnWidths => _currentColumnWidths;
+  List<double>? _currentColumnWidths;
+  double? heightHeader;
+
+  void destroy() {
+    for (final notifiers in queryFilters.values) {
+      notifiers.dispose();
+    }
+    filteredDataNotifier.dispose();
+    sortColumnNotifier.dispose();
+    heightRowNotifier.dispose();
+    verticalScrollController.dispose();
+    horizontalScrollController.dispose();
+    maxHeight.dispose();
+    maxWidth.dispose();
+  }
+
+  void init() {
+    final columnWidths = <double>[];
+    for (int i = 0; i < configuration.columns.length; i++) {
+      columnWidths.add(configuration.columns[i].width);
+      if (configuration.columns[i].queryFilter != null) {
+        queryFilters[i] = ValueNotifier(null);
+      }
+    }
+    columnWidthsNotifier.value = columnWidths;
+    _calculateSelectedRowIndex();
+  }
+
+  void setCurrentConstaints(BoxConstraints constraints) {
+    _currentConstraints = constraints;
+  }
+
+  void setCurrentColumnWidths(List<double> columnWidths) {
+    _currentColumnWidths = columnWidths;
+  }
+
   void setSortColumnIndex(int index, SpargoSortType? type) {
     if (type == null) {
       sortColumnNotifier.value = null;
@@ -105,27 +153,6 @@ class SpargoTableViewModel<T> {
     columnWidthsNotifier.value = newWidths;
   }
 
-  void destroy() {
-    for (final notifiers in queryFilters.values) {
-      notifiers.dispose();
-    }
-    filteredDataNotifier.dispose();
-    sortColumnNotifier.dispose();
-    heightRowNotifier.dispose();
-  }
-
-  void init() {
-    final columnWidths = <double>[];
-    for (int i = 0; i < configuration.columns.length; i++) {
-      columnWidths.add(configuration.columns[i].width);
-      if (configuration.columns[i].queryFilter != null) {
-        queryFilters[i] = ValueNotifier(null);
-      }
-    }
-    columnWidthsNotifier.value = columnWidths;
-    _calculateSelectedRowIndex();
-  }
-
   void didUpdateWidget(SpargoTable<T> widget, SpargoTable<T> oldWidget) {
     this.data = widget.data;
     selectedRow = widget.selectedRow;
@@ -150,4 +177,18 @@ class SpargoTableViewModel<T> {
   void buildSizeCallback(Size sizeRow) {
     heightRowNotifier.value ??= sizeRow.height;
   }
+
+  void setSizes() {
+    final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
+    final renderBoxHeader =
+        headerKey.currentContext?.findRenderObject() as RenderBox?;
+    heightHeader = renderBoxHeader?.size.height;
+    if (heightHeader == null) return;
+    maxHeight.value = renderBox!.size.height - heightHeader!;
+    maxWidth.value = renderBox.size.width;
+  }
+
+  double get tableWidth =>
+      columnWidthsNotifier.value.reduce((a, b) => a + b) +
+      17 * (configuration.columns.length);
 }

@@ -60,35 +60,6 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
     super.dispose();
   }
 
-  final verticalScrollController = ScrollController();
-  final horizontalScrollController = ScrollController();
-
-  final GlobalKey _key = GlobalKey();
-  final GlobalKey _keyHeader = GlobalKey();
-
-  double? maxHeight;
-  double? maxWidth;
-  double? heightHeader;
-
-  void _setSizes() {
-    final renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
-    final renderBoxHeader =
-        _keyHeader.currentContext?.findRenderObject() as RenderBox?;
-    heightHeader = renderBoxHeader?.size.height;
-    if (heightHeader == null) return;
-    setState(() {
-      maxHeight = renderBox!.size.height - heightHeader!;
-      maxWidth = renderBox.size.width;
-    });
-  }
-
-  double get tableWidth =>
-      vm.columnWidthsNotifier.value.reduce((a, b) => a + b) +
-      17 * (widget.configuration.columns.length);
-
-  BoxConstraints? _savedConstraints;
-  List<double>? _savedColumnWidths;
-
   @override
   void didUpdateWidget(SpargoTable<T> oldWidget) {
     vm.didUpdateWidget(widget, oldWidget);
@@ -101,10 +72,10 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
       vm: vm,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (_savedConstraints != constraints) {
-            _savedConstraints = constraints;
+          if (vm.currentConstraints != constraints) {
+            vm.setCurrentConstaints(constraints);
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _setSizes();
+              vm.setSizes();
             });
           }
           return ValueListenableBuilder(
@@ -115,101 +86,118 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                     border: widget.decorationConfiguration.borderTable,
                   ),
                   child: Scrollbar(
-                    controller: horizontalScrollController,
+                    controller: vm.horizontalScrollController,
                     thumbVisibility: widget.thumbVisibility,
                     thickness:
                         widget.decorationConfiguration.scrollbarBottomHeight,
                     child: SingleChildScrollView(
-                      key: _key,
-                      controller: horizontalScrollController,
+                      key: vm.tableKey,
+                      controller: vm.horizontalScrollController,
                       scrollDirection: Axis.horizontal,
                       child: ValueListenableBuilder(
-                          valueListenable: vm.columnWidthsNotifier,
-                          builder: (context, columnWidths, _) {
-                            if (!listEquals(_savedColumnWidths, columnWidths)) {
-                              _savedColumnWidths = columnWidths;
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                _setSizes();
-                              });
-                            }
-                            final addedHeightBySubWidget = widget.selectedRow !=
-                                        null &&
-                                    widget.selectedRowSubWidgetBuilder != null
-                                ? 70
-                                : 0;
-                            double heightContentTable = (heightRow != null
-                                    ? min(maxHeight ?? 9999999,
-                                        heightRow * widget.data.length)
-                                    : (maxHeight ?? widget.maxHeight ?? 300)) +
-                                addedHeightBySubWidget;
-                            if (heightContentTable <
-                                (maxHeight ?? widget.maxHeight ?? 300)) {
-                              final addedHeight = min(
-                                  (maxHeight ?? widget.maxHeight ?? 300) -
-                                      heightContentTable,
-                                  widget.decorationConfiguration
-                                      .bottomPaddingForScrollbar);
-                              heightContentTable += addedHeight;
-                            }
-                            return Column(
-                              children: [
-                                SpargoTableHeaderWidget(
-                                  decorationConfig:
-                                      widget.decorationConfiguration,
-                                  maxHeight: heightHeader,
-                                  key: _keyHeader,
-                                  columns: widget.configuration.columns,
-                                  columnWidths: columnWidths,
-                                  onStartResizeColumn: vm.onStartResizeColumn,
-                                  onMoveResizeColumn: vm.onMoveResizeColumn,
-                                  onEndResizeColumn: vm.onEndResizeColumn,
-                                ),
-                                SelectionArea(
-                                  child: SizedBox(
-                                    height: heightContentTable,
-                                    width: tableWidth,
-                                    child: ValueListenableBuilder(
-                                        valueListenable:
-                                            vm.filteredDataNotifier,
-                                        builder: (context, filteredData, _) {
-                                          return ValueListenableBuilder(
+                          valueListenable: vm.maxHeight,
+                          builder: (context, maxHeight, _) {
+                            return ValueListenableBuilder(
+                                valueListenable: vm.columnWidthsNotifier,
+                                builder: (context, columnWidths, _) {
+                                  if (!listEquals(
+                                      vm.currentColumnWidths, columnWidths)) {
+                                    vm.setCurrentColumnWidths(columnWidths);
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      vm.setSizes();
+                                    });
+                                  }
+                                  final addedHeightBySubWidget = widget
+                                                  .selectedRow !=
+                                              null &&
+                                          widget.selectedRowSubWidgetBuilder !=
+                                              null
+                                      ? 70
+                                      : 0;
+                                  double heightContentTable = (heightRow != null
+                                          ? min(maxHeight ?? 9999999,
+                                              heightRow * widget.data.length)
+                                          : (maxHeight ??
+                                              widget.maxHeight ??
+                                              300)) +
+                                      addedHeightBySubWidget;
+                                  if (heightContentTable <
+                                      (maxHeight ?? widget.maxHeight ?? 300)) {
+                                    final addedHeight = min(
+                                        (maxHeight ?? widget.maxHeight ?? 300) -
+                                            heightContentTable,
+                                        widget.decorationConfiguration
+                                            .bottomPaddingForScrollbar);
+                                    heightContentTable += addedHeight;
+                                  }
+                                  return Column(
+                                    children: [
+                                      SpargoTableHeaderWidget(
+                                        decorationConfig:
+                                            widget.decorationConfiguration,
+                                        maxHeight: vm.heightHeader,
+                                        key: vm.headerKey,
+                                        columns: widget.configuration.columns,
+                                        columnWidths: columnWidths,
+                                        onStartResizeColumn:
+                                            vm.onStartResizeColumn,
+                                        onMoveResizeColumn:
+                                            vm.onMoveResizeColumn,
+                                        onEndResizeColumn: vm.onEndResizeColumn,
+                                      ),
+                                      SelectionArea(
+                                        child: SizedBox(
+                                          height: heightContentTable,
+                                          width: vm.tableWidth,
+                                          child: ValueListenableBuilder(
                                               valueListenable:
-                                                  vm.sortedDataNotifier,
+                                                  vm.filteredDataNotifier,
                                               builder:
-                                                  (context, sortedData, _) {
-                                                final dataForRender =
-                                                    sortedData ??
-                                                        filteredData ??
-                                                        widget.data;
-                                                return _RowWidget<T>(
-                                                  dataForRender: dataForRender,
-                                                  verticalScrollController:
-                                                      verticalScrollController,
-                                                  columnWidths: columnWidths,
-                                                  decorationConfiguration: widget
-                                                      .decorationConfiguration,
-                                                  thumbVisibility:
-                                                      widget.thumbVisibility,
-                                                  selectedRow:
-                                                      widget.selectedRow,
-                                                  selectedRowIndex:
-                                                      vm.selectedRowIndex,
-                                                  onRowTap: widget.onRowTap,
-                                                  configuration:
-                                                      widget.configuration,
-                                                  selectedRowSubWidgetBuilder:
-                                                      widget
-                                                          .selectedRowSubWidgetBuilder,
-                                                  buildSizeCallback:
-                                                      vm.buildSizeCallback,
-                                                  child: widget.child,
-                                                );
-                                              });
-                                        }),
-                                  ),
-                                ),
-                              ],
-                            );
+                                                  (context, filteredData, _) {
+                                                return ValueListenableBuilder(
+                                                    valueListenable:
+                                                        vm.sortedDataNotifier,
+                                                    builder: (context,
+                                                        sortedData, _) {
+                                                      final dataForRender =
+                                                          sortedData ??
+                                                              filteredData ??
+                                                              widget.data;
+                                                      return _RowWidget<T>(
+                                                        dataForRender:
+                                                            dataForRender,
+                                                        verticalScrollController:
+                                                            vm.verticalScrollController,
+                                                        columnWidths:
+                                                            columnWidths,
+                                                        decorationConfiguration:
+                                                            widget
+                                                                .decorationConfiguration,
+                                                        thumbVisibility: widget
+                                                            .thumbVisibility,
+                                                        selectedRow:
+                                                            widget.selectedRow,
+                                                        selectedRowIndex:
+                                                            vm.selectedRowIndex,
+                                                        onRowTap:
+                                                            widget.onRowTap,
+                                                        configuration: widget
+                                                            .configuration,
+                                                        selectedRowSubWidgetBuilder:
+                                                            widget
+                                                                .selectedRowSubWidgetBuilder,
+                                                        buildSizeCallback: vm
+                                                            .buildSizeCallback,
+                                                        child: widget.child,
+                                                      );
+                                                    });
+                                              }),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                });
                           }),
                     ),
                   ),
