@@ -25,7 +25,8 @@ class SpargoTableViewModel<T> {
   final Map<int, ValueNotifier<String?>> queryFilters = {};
   final ValueNotifier<List<T>?> filteredDataNotifier = ValueNotifier(null);
   final ValueNotifier<List<T>?> sortedDataNotifier = ValueNotifier(null);
-  final ValueNotifier<SpargoSortModel?> sortColumnNotifier = ValueNotifier(null);
+  final ValueNotifier<SpargoSortModel?> sortColumnNotifier =
+      ValueNotifier(null);
 
   final ValueNotifier<double?> heightRowNotifier = ValueNotifier(null);
 
@@ -45,7 +46,8 @@ class SpargoTableViewModel<T> {
   double? get heightHeader => _heightHeader;
   double? _heightHeader;
 
-  final ValueNotifier<bool> isDisplayedHorizontalScrollNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> isDisplayedHorizontalScrollNotifier =
+      ValueNotifier(false);
 
   void destroy() {
     for (final notifiers in queryFilters.values) {
@@ -79,7 +81,8 @@ class SpargoTableViewModel<T> {
   }
 
   void setIsDisplayedHorizontalScroll() {
-    isDisplayedHorizontalScrollNotifier.value = horizontalScrollController.position.maxScrollExtent > 0;
+    isDisplayedHorizontalScrollNotifier.value =
+        horizontalScrollController.position.maxScrollExtent > 0;
   }
 
   void setCurrentConstraints(BoxConstraints constraints) {
@@ -106,8 +109,8 @@ class SpargoTableViewModel<T> {
     if (sortColumnNotifier.value == null) return;
     List<T> newSortedData = [...(filteredDataNotifier.value ?? data)];
     newSortedData.sort(
-      (a, b) =>
-          configuration.columns[sortColumnNotifier.value!.columnIndex].sortBy!(a, b, sortColumnNotifier.value!.type),
+      (a, b) => configuration.columns[sortColumnNotifier.value!.columnIndex]
+          .sortBy!(a, b, sortColumnNotifier.value!.type),
     );
     sortedDataNotifier.value = newSortedData;
   }
@@ -128,7 +131,8 @@ class SpargoTableViewModel<T> {
     bool anyFilter = false;
     for (int i = 0; i < configuration.columns.length; i++) {
       if (queryFilters.containsKey(i) && queryFilters[i]!.value != null) {
-        final buffer = newFilteredData.where((e) => configuration.columns[i].queryFilter!(queryFilters[i]!.value!, e));
+        final buffer = newFilteredData.where((e) =>
+            configuration.columns[i].queryFilter!(queryFilters[i]!.value!, e));
         newFilteredData = buffer;
         anyFilter = true;
       }
@@ -163,10 +167,12 @@ class SpargoTableViewModel<T> {
   void onMoveResizeColumn(PointerMoveEvent event, int index) {
     if (_resizeColumnIndex == null) return;
     final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
-    final differenceByTablePositionX = (_startTablePosition?.dx ?? 0) - (renderBox?.localToGlobal(Offset.zero).dx ?? 0);
+    final differenceByTablePositionX = (_startTablePosition?.dx ?? 0) -
+        (renderBox?.localToGlobal(Offset.zero).dx ?? 0);
     final differenceX = event.localPosition.dx - _startMousePosition!.dx;
     final newWidths = [...columnWidthsNotifier.value];
-    newWidths[index] = max(50, _startColumnWidth! + differenceX + differenceByTablePositionX);
+    newWidths[index] =
+        max(50, _startColumnWidth! + differenceX + differenceByTablePositionX);
     columnWidthsNotifier.value = newWidths;
     setIsDisplayedHorizontalScroll();
   }
@@ -180,7 +186,8 @@ class SpargoTableViewModel<T> {
   }
 
   void _calculateSelectedRowIndex() {
-    final resultData = sortedDataNotifier.value ?? filteredDataNotifier.value ?? data;
+    final resultData =
+        sortedDataNotifier.value ?? filteredDataNotifier.value ?? data;
     for (int i = 0; i < resultData.length; i++) {
       final item = resultData[i];
       if (item == selectedRow) {
@@ -197,12 +204,15 @@ class SpargoTableViewModel<T> {
 
   void setSizes() {
     final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
-    final renderBoxHeader = headerKey.currentContext?.findRenderObject() as RenderBox?;
+    final renderBoxHeader =
+        headerKey.currentContext?.findRenderObject() as RenderBox?;
     _heightHeader = renderBoxHeader?.size.height;
     if (_heightHeader == null) return;
     maxHeightNotifier.value = renderBox!.size.height - _heightHeader!;
     maxWidthNotifier.value = renderBox.size.width;
   }
 
-  double get tableWidth => columnWidthsNotifier.value.reduce((a, b) => a + b) + 17 * (configuration.columns.length);
+  double get tableWidth =>
+      columnWidthsNotifier.value.reduce((a, b) => a + b) +
+      17 * (configuration.columns.length);
 }
