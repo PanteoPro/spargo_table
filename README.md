@@ -1,5 +1,3 @@
-markdown
-Copy
 # SpargoTable Library
 
 A highly customizable and flexible table widget for Flutter applications. Easily display and manage tabular data with sorting, filtering, and custom styling.
@@ -66,5 +64,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 5. **Configuration Options**: Explains key parameters.
 6. **Example**: A minimal example for quick reference.
 7. **Contributing and License**: Encourages contributions and specifies the license.
-
-This `README.md` is clean, concise, and provides all the necessary information for users to get started with your library.
