@@ -142,27 +142,33 @@ class SpargoTableViewModel<T> {
 
   int? _resizeColumnIndex;
   double? _startColumnWidth;
-  Offset? startMousePosition;
+  Offset? _startMousePosition;
+  Offset? _startTablePosition;
 
   void onStartResizeColumn(PointerDownEvent event, int index) {
     _resizeColumnIndex = index;
     _startColumnWidth = columnWidthsNotifier.value[index];
-    startMousePosition = event.position;
+    _startMousePosition = event.localPosition;
+    final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
+    _startTablePosition = renderBox?.localToGlobal(Offset.zero);
   }
 
   void onEndResizeColumn(PointerUpEvent event, int index) {
     _resizeColumnIndex = null;
     _startColumnWidth = null;
-    startMousePosition = null;
+    _startMousePosition = null;
     setIsDisplayedHorizontalScroll();
   }
 
   void onMoveResizeColumn(PointerMoveEvent event, int index) {
     if (_resizeColumnIndex == null) return;
-    final differenceX = event.position.dx - startMousePosition!.dx;
+    final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
+    final differenceByTablePositionX = (_startTablePosition?.dx ?? 0) - (renderBox?.localToGlobal(Offset.zero).dx ?? 0);
+    final differenceX = event.localPosition.dx - _startMousePosition!.dx;
     final newWidths = [...columnWidthsNotifier.value];
-    newWidths[index] = max(50, _startColumnWidth! + differenceX);
+    newWidths[index] = max(50, _startColumnWidth! + differenceX + differenceByTablePositionX);
     columnWidthsNotifier.value = newWidths;
+    setIsDisplayedHorizontalScroll();
   }
 
   void didUpdateWidget(SpargoTable<T> widget, SpargoTable<T> oldWidget) {
