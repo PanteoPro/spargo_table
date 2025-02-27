@@ -55,12 +55,3 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-### Key Points:
-1. **Introduction**: Briefly explains what the library does.
-2. **Features**: Highlights the main functionalities.
-3. **Installation**: Provides instructions for adding the library to a Flutter project.
-4. **Usage**: Demonstrates how to use the `SpargoTable` widget with a concise example.
-5. **Configuration Options**: Explains key parameters.
-6. **Example**: A minimal example for quick reference.
-7. **Contributing and License**: Encourages contributions and specifies the license.
