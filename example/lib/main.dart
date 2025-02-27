@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SpargoTable<DemoModel>(
               maxHeight: 472,
               data: List.generate(
-                1000,
+                10000,
                 (index) => DemoModel(
                   index,
                   'name_$index',

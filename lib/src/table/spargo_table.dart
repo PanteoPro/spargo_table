@@ -148,6 +148,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                                             final dataForRender =
                                                                 sortedData ?? filteredData ?? widget.data;
                                                             return _ContentWidget<T>(
+                                                              heightRow: heightRow,
                                                               dataForRender: dataForRender,
                                                               verticalScrollController: vm.verticalScrollController,
                                                               columnWidths: columnWidths,
@@ -185,6 +186,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
 class _ContentWidget<T> extends StatefulWidget {
   const _ContentWidget({
     super.key,
+    required this.heightRow,
     required this.dataForRender,
     required this.columnWidths,
     required this.verticalScrollController,
@@ -200,6 +202,7 @@ class _ContentWidget<T> extends StatefulWidget {
     required this.child,
   });
 
+  final double? heightRow;
   final List<T> dataForRender;
   final List<double> columnWidths;
   final ScrollController verticalScrollController;
@@ -245,6 +248,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
               child: ListView.builder(
                 physics: const ClampingScrollPhysics(),
                 controller: widget.verticalScrollController,
+                itemExtent: widget.heightRow,
                 itemBuilder: (context, index) {
                   final colorRow = widget.decorationConfiguration.colorRowsBetweenRows
                       ? index % 2 == 0
