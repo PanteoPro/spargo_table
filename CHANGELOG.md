@@ -1,3 +1,6 @@
+## 0.0.4
+* Fix last row render
+
 ## 0.0.3
 * Optimized and upgraded logic for changing column width.
 * Improved scrolling performance for the table.
