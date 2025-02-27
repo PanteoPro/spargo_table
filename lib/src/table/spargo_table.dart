@@ -107,70 +107,65 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
               _setSizes();
             });
           }
-          return SelectionArea(
-            child: ValueListenableBuilder(
-                valueListenable: vm.heightRowNotifier,
-                builder: (context, heightRow, _) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      border: widget.decorationConfiguration.borderTable,
-                    ),
-                    child: Scrollbar(
+          return ValueListenableBuilder(
+              valueListenable: vm.heightRowNotifier,
+              builder: (context, heightRow, _) {
+                return Container(
+                  decoration: BoxDecoration(
+                    border: widget.decorationConfiguration.borderTable,
+                  ),
+                  child: Scrollbar(
+                    controller: horizontalScrollController,
+                    thumbVisibility: widget.thumbVisibility,
+                    thickness:
+                        widget.decorationConfiguration.scrollbarBottomHeight,
+                    child: SingleChildScrollView(
+                      key: _key,
                       controller: horizontalScrollController,
-                      thumbVisibility: widget.thumbVisibility,
-                      thickness:
-                          widget.decorationConfiguration.scrollbarBottomHeight,
-                      child: SingleChildScrollView(
-                        key: _key,
-                        controller: horizontalScrollController,
-                        scrollDirection: Axis.horizontal,
-                        child: ValueListenableBuilder(
-                            valueListenable: vm.columnWidthsNotifier,
-                            builder: (context, columnWidths, _) {
-                              if (!listEquals(
-                                  _savedColumnWidths, columnWidths)) {
-                                _savedColumnWidths = columnWidths;
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((_) {
-                                  _setSizes();
-                                });
-                              }
-                              final addedHeightBySubWidget =
-                                  widget.selectedRow != null &&
-                                          widget.selectedRowSubWidgetBuilder !=
-                                              null
-                                      ? 70
-                                      : 0;
-                              double heightContentTable = (heightRow != null
-                                      ? min(maxHeight ?? 9999999,
-                                          heightRow * widget.data.length)
-                                      : (maxHeight ??
-                                          widget.maxHeight ??
-                                          300)) +
-                                  addedHeightBySubWidget;
-                              if (heightContentTable <
-                                  (maxHeight ?? widget.maxHeight ?? 300)) {
-                                final addedHeight = min(
-                                    (maxHeight ?? widget.maxHeight ?? 300) -
-                                        heightContentTable,
-                                    widget.decorationConfiguration
-                                        .bottomPaddingForScrollbar);
-                                heightContentTable += addedHeight;
-                              }
-                              return Column(
-                                children: [
-                                  SpargoTableHeaderWidget(
-                                    decorationConfig:
-                                        widget.decorationConfiguration,
-                                    maxHeight: heightHeader,
-                                    key: _keyHeader,
-                                    columns: widget.configuration.columns,
-                                    columnWidths: columnWidths,
-                                    onStartResizeColumn: vm.onStartResizeColumn,
-                                    onMoveResizeColumn: vm.onMoveResizeColumn,
-                                    onEndResizeColumn: vm.onEndResizeColumn,
-                                  ),
-                                  SizedBox(
+                      scrollDirection: Axis.horizontal,
+                      child: ValueListenableBuilder(
+                          valueListenable: vm.columnWidthsNotifier,
+                          builder: (context, columnWidths, _) {
+                            if (!listEquals(_savedColumnWidths, columnWidths)) {
+                              _savedColumnWidths = columnWidths;
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _setSizes();
+                              });
+                            }
+                            final addedHeightBySubWidget = widget.selectedRow !=
+                                        null &&
+                                    widget.selectedRowSubWidgetBuilder != null
+                                ? 70
+                                : 0;
+                            double heightContentTable = (heightRow != null
+                                    ? min(maxHeight ?? 9999999,
+                                        heightRow * widget.data.length)
+                                    : (maxHeight ?? widget.maxHeight ?? 300)) +
+                                addedHeightBySubWidget;
+                            if (heightContentTable <
+                                (maxHeight ?? widget.maxHeight ?? 300)) {
+                              final addedHeight = min(
+                                  (maxHeight ?? widget.maxHeight ?? 300) -
+                                      heightContentTable,
+                                  widget.decorationConfiguration
+                                      .bottomPaddingForScrollbar);
+                              heightContentTable += addedHeight;
+                            }
+                            return Column(
+                              children: [
+                                SpargoTableHeaderWidget(
+                                  decorationConfig:
+                                      widget.decorationConfiguration,
+                                  maxHeight: heightHeader,
+                                  key: _keyHeader,
+                                  columns: widget.configuration.columns,
+                                  columnWidths: columnWidths,
+                                  onStartResizeColumn: vm.onStartResizeColumn,
+                                  onMoveResizeColumn: vm.onMoveResizeColumn,
+                                  onEndResizeColumn: vm.onEndResizeColumn,
+                                ),
+                                SelectionArea(
+                                  child: SizedBox(
                                     height: heightContentTable,
                                     width: tableWidth,
                                     child: ValueListenableBuilder(
@@ -212,14 +207,14 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                               });
                                         }),
                                   ),
-                                ],
-                              );
-                            }),
-                      ),
+                                ),
+                              ],
+                            );
+                          }),
                     ),
-                  );
-                }),
-          );
+                  ),
+                );
+              });
         },
       ),
     );

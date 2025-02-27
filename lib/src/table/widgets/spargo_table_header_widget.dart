@@ -52,30 +52,34 @@ class SpargoTableHeaderWidget<T> extends StatelessWidget {
                 if (index < columns.length - 1)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Listener(
-                      onPointerDown: (event) =>
-                          onStartResizeColumn(event, index),
-                      onPointerUp: (event) => onEndResizeColumn(event, index),
-                      onPointerMove: (event) =>
-                          onMoveResizeColumn(event, index),
-                      child: Tooltip(
-                        message: 'Изменить размер',
-                        child: Material(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
-                          color: Colors.transparent,
-                          child: InkWell(
-                            mouseCursor: SystemMouseCursors.click,
+                    child: MouseRegion(
+                      cursor: MouseCursor.defer,
+                      child: Listener(
+                        onPointerDown: (event) =>
+                            onStartResizeColumn(event, index),
+                        onPointerUp: (event) => onEndResizeColumn(event, index),
+                        onPointerMove: (event) =>
+                            onMoveResizeColumn(event, index),
+                        child: Tooltip(
+                          message: 'Изменить размер',
+                          child: Material(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(8)),
-                            onTap: () {},
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 6),
-                              child: Container(
-                                width: 1,
-                                height: maxHeight != null ? maxHeight! - 8 : 35,
-                                color: Theme.of(context).colorScheme.outline,
+                            color: Colors.transparent,
+                            child: InkWell(
+                              mouseCursor: SystemMouseCursors.click,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(8)),
+                              onTap: () {},
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                child: Container(
+                                  width: 1,
+                                  height:
+                                      maxHeight != null ? maxHeight! - 8 : 35,
+                                  color: Theme.of(context).colorScheme.outline,
+                                ),
                               ),
                             ),
                           ),
