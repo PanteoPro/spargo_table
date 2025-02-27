@@ -14,7 +14,6 @@ class SpargoTableViewModel<T> {
   }) : _widgetState = widgetState;
 
   final State _widgetState;
-  BuildContext get _context => _widgetState.context;
   bool get mounted => _widgetState.mounted;
 
   final SpargoTableConfig<T> configuration;
@@ -106,7 +105,6 @@ class SpargoTableViewModel<T> {
     columnWidthsNotifier.value = newWidths;
   }
 
-  @override
   void destroy() {
     for (final notifiers in queryFilters.values) {
       notifiers.dispose();
@@ -116,7 +114,6 @@ class SpargoTableViewModel<T> {
     heightRowNotifier.dispose();
   }
 
-  @override
   void init() {
     final columnWidths = <double>[];
     for (int i = 0; i < configuration.columns.length; i++) {
