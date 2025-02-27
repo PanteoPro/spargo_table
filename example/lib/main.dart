@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             SpargoTable<DemoModel>(
+              maxHeight: 460,
               data: List.generate(
                 10,
                 (index) => DemoModel(
@@ -79,7 +80,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   SpargoTableColumnConfig(name: 'Value6'),
                 ],
                 buildRow: (model) => [
-                  SpargoTableCellConfig(child: Text(model.id.toString())),
+                  SpargoTableCellConfig(
+                      child: Column(
+                    children: [
+                      Text(model.id.toString()),
+                      Text(model.id.toString()),
+                    ],
+                  )),
                   SpargoTableCellConfig(child: Text(model.name.toString())),
                   SpargoTableCellConfig(child: Text(model.value1.toString())),
                   SpargoTableCellConfig(child: Text(model.value2.toString())),

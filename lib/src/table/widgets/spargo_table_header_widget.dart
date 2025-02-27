@@ -192,11 +192,6 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
         onChanged: (query) => vm?.setQueryByColumn(query, widget.index),
         style: widget.decorationConfig.textStyleTextField,
         decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: widget.decorationConfig.enableBorderTextFieldColor ??
-                    Theme.of(context).colorScheme.outline),
-          ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
                 color: widget.decorationConfig.focusBorderTextFieldColor ??

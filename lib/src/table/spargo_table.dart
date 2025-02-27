@@ -118,6 +118,8 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                     child: Scrollbar(
                       controller: horizontalScrollController,
                       thumbVisibility: widget.thumbVisibility,
+                      thickness:
+                          widget.decorationConfiguration.scrollbarBottomHeight,
                       child: SingleChildScrollView(
                         key: _key,
                         controller: horizontalScrollController,
@@ -139,13 +141,22 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                               null
                                       ? 70
                                       : 0;
-                              final heightContentTable = (heightRow != null
+                              double heightContentTable = (heightRow != null
                                       ? min(maxHeight ?? 9999999,
                                           heightRow * widget.data.length)
                                       : (maxHeight ??
                                           widget.maxHeight ??
                                           300)) +
                                   addedHeightBySubWidget;
+                              if (heightContentTable <
+                                  (maxHeight ?? widget.maxHeight ?? 300)) {
+                                final addedHeight = min(
+                                    (maxHeight ?? widget.maxHeight ?? 300) -
+                                        heightContentTable,
+                                    widget.decorationConfiguration
+                                        .bottomPaddingForScrollbar);
+                                heightContentTable += addedHeight;
+                              }
                               return Column(
                                 children: [
                                   SpargoTableHeaderWidget(
@@ -301,19 +312,26 @@ class _RowWidgetState<T> extends State<_RowWidget<T>> {
                     resultIndex--;
                   }
 
-                  return SpargoTableRowWidget(
-                    key: index == 0 ? _key : null,
-                    isSelected:
-                        widget.selectedRow == widget.dataForRender[resultIndex],
-                    onRowTap: widget.onRowTap != null
-                        ? () =>
-                            widget.onRowTap!(widget.dataForRender[resultIndex])
-                        : null,
-                    columns: widget.configuration.columns,
-                    columnWidths: widget.columnWidths,
-                    buildRow: () => widget.configuration
-                        .buildRow(widget.dataForRender[resultIndex]),
-                    colorRow: colorRow,
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: index == itemsCount - 1
+                            ? widget.decorationConfiguration
+                                .bottomPaddingForScrollbar
+                            : 0),
+                    child: SpargoTableRowWidget(
+                      key: index == 0 ? _key : null,
+                      isSelected: widget.selectedRow ==
+                          widget.dataForRender[resultIndex],
+                      onRowTap: widget.onRowTap != null
+                          ? () => widget
+                              .onRowTap!(widget.dataForRender[resultIndex])
+                          : null,
+                      columns: widget.configuration.columns,
+                      columnWidths: widget.columnWidths,
+                      buildRow: () => widget.configuration
+                          .buildRow(widget.dataForRender[resultIndex]),
+                      colorRow: colorRow,
+                    ),
                   );
                 },
                 itemCount: itemsCount,

@@ -10,10 +10,11 @@ class SpargoTableDecorationConfig {
     this.borderTable,
     this.iconHeaderColor,
     this.activeIconHeaderColor,
-    this.enableBorderTextFieldColor,
     this.focusBorderTextFieldColor,
     this.textStyleTextField,
     this.cursorColor,
+    this.scrollbarBottomHeight = 8,
+    this.bottomPaddingForScrollbar = 12,
   });
   final bool colorRowsBetweenRows;
 
@@ -36,11 +37,18 @@ class SpargoTableDecorationConfig {
   /// Активный цвет иконки сортировка и фильтрации
   final Color? activeIconHeaderColor;
 
-  final Color? enableBorderTextFieldColor;
-
+  /// Цвет обводки в фокусе TextField
   final Color? focusBorderTextFieldColor;
 
+  /// Цвет в TextField курсора
   final Color? cursorColor;
 
+  /// TextStyle TextField в head колонки
   final TextStyle? textStyleTextField;
+
+  /// Ширина нижнего scrollbar
+  final double scrollbarBottomHeight;
+
+  /// Отступ для нижнего scrollbar
+  final double bottomPaddingForScrollbar;
 }
