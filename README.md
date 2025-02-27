@@ -1,39 +1,70 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+markdown
+Copy
+# SpargoTable Library
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A highly customizable and flexible table widget for Flutter applications. Easily display and manage tabular data with sorting, filtering, and custom styling.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Customizable Rows and Columns**: Define your own row and column layouts.
+- **Sorting**: Sort data by any column in ascending or descending order.
+- **Filtering**: Filter rows based on user input.
+- **Styling**: Fully customizable table appearance, including headers, rows, and borders.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add the library to your `pubspec.yaml`:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  spargo_table: ^0.0.1
 ```
 
-## Additional information
+Then run:
+```bash
+flutter pub get
+```
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## Configuration Options
+- **data**: The list of items to display in the table.
+- **decorationConfiguration**: Customize the table’s appearance (colors, borders, etc.).
+- **configuration**: Define columns, rows, sorting, and filtering behavior.
+
+## Example
+Here’s a minimal example:
+
+```dart
+SpargoTable<MyModel>(
+  data: myDataList,
+  decorationConfiguration: SpargoTableDecorationConfig(
+    headerBackground: Colors.blue,
+    borderTable: Border.all(color: Colors.black),
+  ),
+  configuration: SpargoTableConfig(
+    buildRow: (model) => [
+      SpargoTableCellConfig(child: Text(model.name)),
+      SpargoTableCellConfig(child: Text(model.value.toString())),
+    ],
+    columns: [
+      SpargoTableColumnConfig(name: "Name", width: 100),
+      SpargoTableColumnConfig(name: "Value", width: 100),
+    ],
+  ),
+);
+```
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+### Key Points:
+1. **Introduction**: Briefly explains what the library does.
+2. **Features**: Highlights the main functionalities.
+3. **Installation**: Provides instructions for adding the library to a Flutter project.
+4. **Usage**: Demonstrates how to use the `SpargoTable` widget with a concise example.
+5. **Configuration Options**: Explains key parameters.
+6. **Example**: A minimal example for quick reference.
+7. **Contributing and License**: Encourages contributions and specifies the license.
+
+This `README.md` is clean, concise, and provides all the necessary information for users to get started with your library.
