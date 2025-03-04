@@ -12,18 +12,18 @@ import 'package:spargo_table/src/table/widgets/spargo_table_row_widget.dart';
 typedef SubRowWidget<T> = Widget Function(T model);
 
 class SpargoTable<T> extends StatefulWidget {
-  const SpargoTable({
-    super.key,
-    required this.data,
-    required this.configuration,
-    this.maxHeight,
-    this.selectedRow,
-    this.onRowTap,
-    this.thumbVisibility = true,
-    this.selectedRowSubWidgetBuilder,
-    this.decorationConfiguration = const SpargoTableDecorationConfig(),
-    this.child,
-  });
+  const SpargoTable(
+      {super.key,
+      required this.data,
+      required this.configuration,
+      this.maxHeight,
+      this.selectedRow,
+      this.onRowTap,
+      this.thumbVisibility = true,
+      this.selectedRowSubWidgetBuilder,
+      this.decorationConfiguration = const SpargoTableDecorationConfig(),
+      this.child,
+      this.isMarked});
 
   final List<T> data;
   final T? selectedRow;
@@ -31,6 +31,7 @@ class SpargoTable<T> extends StatefulWidget {
   final SpargoTableDecorationConfig decorationConfiguration;
 
   final void Function(T model)? onRowTap;
+  final bool Function(T model)? isMarked;
   final SubRowWidget<T>? selectedRowSubWidgetBuilder;
   final bool thumbVisibility;
   final double? maxHeight;
@@ -203,6 +204,8 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                                                   vm.selectedRowIndex,
                                                               onRowTap: widget
                                                                   .onRowTap,
+                                                              isMarked: widget
+                                                                  .isMarked,
                                                               configuration: widget
                                                                   .configuration,
                                                               selectedRowSubWidgetBuilder:
@@ -251,6 +254,7 @@ class _ContentWidget<T> extends StatefulWidget {
     required this.buildSizeCallback,
     required this.isDisplayedHorizontalScroll,
     required this.child,
+    required this.isMarked,
   });
 
   final double? heightRow;
@@ -267,6 +271,7 @@ class _ContentWidget<T> extends StatefulWidget {
   final void Function(Size size) buildSizeCallback;
   final bool isDisplayedHorizontalScroll;
   final Widget? child;
+  final bool Function(T model)? isMarked;
 
   @override
   State<_ContentWidget<T>> createState() => _ContentWidgetState<T>();
@@ -311,13 +316,16 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                   controller: widget.verticalScrollController,
                   itemExtent: widget.heightRow,
                   itemBuilder: (context, index) {
-                    final colorRow = widget
-                            .decorationConfiguration.colorRowsBetweenRows
-                        ? index % 2 == 0
-                            ? widget.decorationConfiguration.colorOddItems
-                            : widget.decorationConfiguration.colorEvenItems ??
-                                Colors.grey.withValues(alpha: 210)
-                        : null;
+                    final colorRow = (widget.isMarked != null &&
+                            widget.isMarked!(widget.dataForRender[index]))
+                        ? widget.decorationConfiguration.rowIsMarkedColor
+                        : widget.decorationConfiguration.colorRowsBetweenRows
+                            ? (index % 2 == 0
+                                ? widget.decorationConfiguration.colorOddItems
+                                : widget.decorationConfiguration
+                                        .colorEvenItems ??
+                                    Colors.grey.withAlpha(210))
+                            : null;
                     int resultIndex = index;
                     if (widget.selectedRowSubWidgetBuilder != null &&
                         widget.selectedRowIndex == index - 1) {

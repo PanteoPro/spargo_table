@@ -17,6 +17,7 @@ class SpargoTableDecorationConfig {
     this.bottomPaddingForScrollbar = 12,
     this.showBottomBorderBetweenRows,
     this.borderRadius,
+    this.rowIsMarkedColor,
   });
   final bool colorRowsBetweenRows;
 
@@ -25,6 +26,9 @@ class SpargoTableDecorationConfig {
 
   /// Цвет чет строки
   final Color? colorEvenItems;
+
+  /// цвет, в который будет окрашена строка таблицы,если для нее будет определено и выполнено (true) условие isMarked внутри _ContentWidget
+  final Color? rowIsMarkedColor;
 
   /// Цвет шапки таблицы
   final Color? headerBackground;
