@@ -49,54 +49,94 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SpargoTable<DemoModel>(
-              maxHeight: 472,
-              data: List.generate(
-                100,
-                (index) => DemoModel(
-                  index,
-                  'name_$index',
-                  'value_1_$index',
-                  'value_2_$index',
-                  'value_3_$index',
-                  'value_4_$index',
-                  'value_5_$index',
-                  'value_6_$index',
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SpargoTable<DemoModel>(
+                maxHeight: 472,
+                data: List.generate(
+                  100,
+                  (index) => DemoModel(
+                    index,
+                    'name_$index',
+                    'value_1_$index',
+                    'value_2_$index',
+                    'value_3_$index',
+                    'value_4_$index',
+                    'value_5_$index',
+                    'value_6_$index',
+                  ),
+                ),
+                configuration: SpargoTableConfig(
+                  columns: [
+                    SpargoTableColumnConfig(name: 'Id'),
+                    SpargoTableColumnConfig(name: 'Name'),
+                    SpargoTableColumnConfig(name: 'Value1'),
+                    SpargoTableColumnConfig(name: 'Value2'),
+                    SpargoTableColumnConfig(name: 'Value3'),
+                    SpargoTableColumnConfig(name: 'Value4'),
+                    SpargoTableColumnConfig(name: 'Value5'),
+                    SpargoTableColumnConfig(name: 'Value6'),
+                  ],
+                  buildRow: (model) => [
+                    SpargoTableCellConfig(
+                        child: Column(
+                      children: [
+                        Text(model.id.toString()),
+                        Text(model.id.toString()),
+                      ],
+                    )),
+                    SpargoTableCellConfig(child: Text(model.name.toString())),
+                    SpargoTableCellConfig(child: Text(model.value1.toString())),
+                    SpargoTableCellConfig(child: Text(model.value2.toString())),
+                    SpargoTableCellConfig(child: Text(model.value3.toString())),
+                    SpargoTableCellConfig(child: Text(model.value4.toString())),
+                    SpargoTableCellConfig(child: Text(model.value5.toString())),
+                    SpargoTableCellConfig(child: Text(model.value6.toString())),
+                  ],
                 ),
               ),
-              configuration: SpargoTableConfig(
-                columns: [
-                  SpargoTableColumnConfig(name: 'Id'),
-                  SpargoTableColumnConfig(name: 'Name'),
-                  SpargoTableColumnConfig(name: 'Value1'),
-                  SpargoTableColumnConfig(name: 'Value2'),
-                  SpargoTableColumnConfig(name: 'Value3'),
-                  SpargoTableColumnConfig(name: 'Value4'),
-                  SpargoTableColumnConfig(name: 'Value5'),
-                  SpargoTableColumnConfig(name: 'Value6'),
-                ],
-                buildRow: (model) => [
-                  SpargoTableCellConfig(
-                      child: Column(
-                    children: [
-                      Text(model.id.toString()),
-                      Text(model.id.toString()),
-                    ],
-                  )),
-                  SpargoTableCellConfig(child: Text(model.name.toString())),
-                  SpargoTableCellConfig(child: Text(model.value1.toString())),
-                  SpargoTableCellConfig(child: Text(model.value2.toString())),
-                  SpargoTableCellConfig(child: Text(model.value3.toString())),
-                  SpargoTableCellConfig(child: Text(model.value4.toString())),
-                  SpargoTableCellConfig(child: Text(model.value5.toString())),
-                  SpargoTableCellConfig(child: Text(model.value6.toString())),
-                ],
+              SpargoTable<DemoModel>(
+                maxHeight: 472,
+                data: List.generate(
+                  1,
+                  (index) => DemoModel(
+                    index,
+                    'name_$index',
+                    'value_1_$index',
+                    'value_2_$index',
+                    'value_3_$index',
+                    'value_4_$index',
+                    'value_5_$index',
+                    'value_6_$index',
+                  ),
+                ),
+                configuration: SpargoTableConfig(
+                  columns: [
+                    SpargoTableColumnConfig(name: 'Id'),
+                    SpargoTableColumnConfig(name: 'Name'),
+                    SpargoTableColumnConfig(name: 'Value1'),
+                    SpargoTableColumnConfig(name: 'Value2'),
+                    SpargoTableColumnConfig(name: 'Value3'),
+                    SpargoTableColumnConfig(name: 'Value4'),
+                    SpargoTableColumnConfig(name: 'Value5'),
+                    SpargoTableColumnConfig(name: 'Value6'),
+                  ],
+                  buildRow: (model) => [
+                    SpargoTableCellConfig(child: Text(model.id.toString())),
+                    SpargoTableCellConfig(child: Text(model.name.toString())),
+                    SpargoTableCellConfig(child: Text(model.value1.toString())),
+                    SpargoTableCellConfig(child: Text(model.value2.toString())),
+                    SpargoTableCellConfig(child: Text(model.value3.toString())),
+                    SpargoTableCellConfig(child: Text(model.value4.toString())),
+                    SpargoTableCellConfig(child: Text(model.value5.toString())),
+                    SpargoTableCellConfig(child: Text(model.value6.toString())),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

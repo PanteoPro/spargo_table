@@ -278,22 +278,16 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                       resultIndex--;
                     }
 
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          bottom: index == itemsCount - 1 && widget.isDisplayedHorizontalScroll
-                              ? widget.decorationConfiguration.bottomPaddingForScrollbar
-                              : 0),
-                      child: SpargoTableRowWidget(
-                        key: index == 0 ? _key : null,
-                        isSelected: widget.selectedRow == widget.dataForRender[resultIndex],
-                        onRowTap:
-                            widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[resultIndex]) : null,
-                        columns: widget.configuration.columns,
-                        columnWidths: widget.columnWidths,
-                        buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
-                        colorRow: colorRow,
-                        border: widget.decorationConfiguration.borderRow,
-                      ),
+                    return SpargoTableRowWidget(
+                      key: index == 0 ? _key : null,
+                      isSelected: widget.selectedRow == widget.dataForRender[resultIndex],
+                      onRowTap:
+                          widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[resultIndex]) : null,
+                      columns: widget.configuration.columns,
+                      columnWidths: widget.columnWidths,
+                      buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
+                      colorRow: colorRow,
+                      border: widget.decorationConfiguration.borderRow,
                     );
                   },
                   itemCount: itemsCount,

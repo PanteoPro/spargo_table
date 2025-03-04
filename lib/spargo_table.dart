@@ -3,3 +3,7 @@ export 'src/table/config/spargo_table_cell_config.dart';
 export 'src/table/config/spargo_table_config.dart';
 export 'src/table/config/spargo_table_decoration_config.dart';
 export 'src/table/config/spargo_table_header_config.dart';
+export 'src/table/models/spargo_sort_model.dart';
+export 'src/table/widgets/spargo_table_cell_widget.dart';
+export 'src/table/widgets/spargo_table_header_widget.dart';
+export 'src/table/widgets/spargo_table_row_widget.dart';

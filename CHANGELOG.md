@@ -1,3 +1,6 @@
+## 0.0.6
+* Adjusted row height behavior to ensure consistent height for rows when a horizontal scrollbar is present.
+
 ## 0.0.5
 * Introduced new properties to the ```SpargoTableDecorationConfig``` class:
     * ```borderRow```: Allows customization of the border for table rows.
