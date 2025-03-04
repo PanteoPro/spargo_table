@@ -48,6 +48,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
     data: widget.data,
     selectedRow: widget.selectedRow,
     configuration: widget.configuration,
+    decorationConfiguration: widget.decorationConfiguration,
   );
 
   @override
@@ -77,6 +78,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
           if (vm.currentConstraints != constraints) {
             vm.setCurrentConstraints(constraints);
             WidgetsBinding.instance.addPostFrameCallback((_) {
+              vm.setIsDisplayedHorizontalScroll();
               vm.setSizes();
             });
           }
@@ -107,6 +109,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                         if (!listEquals(vm.currentColumnWidths, columnWidths)) {
                                           vm.setCurrentColumnWidths(columnWidths);
                                           WidgetsBinding.instance.addPostFrameCallback((_) {
+                                            vm.setIsDisplayedHorizontalScroll();
                                             vm.setSizes();
                                           });
                                         }

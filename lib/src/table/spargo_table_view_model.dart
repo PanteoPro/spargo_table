@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:spargo_table/spargo_table.dart';
 import 'package:spargo_table/src/table/config/spargo_table_config.dart';
 import 'package:spargo_table/src/table/models/spargo_sort_model.dart';
 import 'package:spargo_table/src/table/spargo_table.dart';
@@ -9,6 +10,7 @@ class SpargoTableViewModel<T> {
   SpargoTableViewModel({
     required this.data,
     required this.configuration,
+    required this.decorationConfiguration,
     required this.selectedRow,
     required State widgetState,
   }) : _widgetState = widgetState;
@@ -17,6 +19,7 @@ class SpargoTableViewModel<T> {
   bool get mounted => _widgetState.mounted;
 
   final SpargoTableConfig<T> configuration;
+  final SpargoTableDecorationConfig decorationConfiguration;
   List<T> data;
   T? selectedRow;
   int? selectedRowIndex;
@@ -79,6 +82,9 @@ class SpargoTableViewModel<T> {
   }
 
   void setIsDisplayedHorizontalScroll() {
+    if (!horizontalScrollController.hasClients) {
+      return;
+    }
     isDisplayedHorizontalScrollNotifier.value = horizontalScrollController.position.maxScrollExtent > 0;
   }
 
@@ -200,7 +206,9 @@ class SpargoTableViewModel<T> {
     final renderBoxHeader = headerKey.currentContext?.findRenderObject() as RenderBox?;
     _heightHeader = renderBoxHeader?.size.height;
     if (_heightHeader == null) return;
-    maxHeightNotifier.value = renderBox!.size.height - _heightHeader!;
+    maxHeightNotifier.value = renderBox!.size.height -
+        _heightHeader! +
+        (isDisplayedHorizontalScrollNotifier.value ? decorationConfiguration.bottomPaddingForScrollbar : 0);
     maxWidthNotifier.value = renderBox.size.width;
   }
 
