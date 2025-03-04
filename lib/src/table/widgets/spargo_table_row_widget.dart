@@ -12,7 +12,8 @@ class SpargoTableRowWidget extends StatelessWidget {
     required this.onRowTap,
     required this.isSelected,
     required this.colorRow,
-    required this.showBottomBorder,
+    required this.bottomRowBorder,
+
   });
 
   final List<SpargoTableColumnConfig> columns;
@@ -21,7 +22,8 @@ class SpargoTableRowWidget extends StatelessWidget {
   final void Function()? onRowTap;
   final bool isSelected;
   final Color? colorRow;
-  final bool? showBottomBorder;
+  final Border bottomRowBorder;
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,7 @@ class SpargoTableRowWidget extends StatelessWidget {
         onTap: onRowTap,
         child: DecoratedBox(
           decoration: BoxDecoration(
-              border: showBottomBorder == true
-                  ? Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outline))
-                  : null),
+              border: bottomRowBorder),
           child: Row(
             spacing: 17,
             children: [

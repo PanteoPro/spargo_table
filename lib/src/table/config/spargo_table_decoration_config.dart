@@ -15,11 +15,13 @@ class SpargoTableDecorationConfig {
     this.cursorColor,
     this.scrollbarBottomHeight = 8,
     this.bottomPaddingForScrollbar = 12,
-    this.showBottomBorderBetweenRows = true,
+    this.bottomBorderBetweenRows,
     this.tableBorderRadius,
     this.headerBorderRadius,
     this.rowIsMarkedColor,
   });
+
+  /// При значении true цвет четных и нечетных строк в таблице будет различаться
   final bool colorRowsBetweenRows;
 
   /// Цвет нечет строки
@@ -59,8 +61,8 @@ class SpargoTableDecorationConfig {
   /// Отступ для нижнего scrollbar
   final double bottomPaddingForScrollbar;
 
-  /// Нужна ли граница между строками таблицы
-  final bool showBottomBorderBetweenRows;
+  /// Граница между строками таблицы
+  final Border? bottomBorderBetweenRows;
 
   /// Значение радиуса угла таблицы
   final BorderRadius? tableBorderRadius;

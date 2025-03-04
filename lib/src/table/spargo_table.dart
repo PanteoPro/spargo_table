@@ -12,18 +12,19 @@ import 'package:spargo_table/src/table/widgets/spargo_table_row_widget.dart';
 typedef SubRowWidget<T> = Widget Function(T model);
 
 class SpargoTable<T> extends StatefulWidget {
-  const SpargoTable(
-      {super.key,
-      required this.data,
-      required this.configuration,
-      this.maxHeight,
-      this.selectedRow,
-      this.onRowTap,
-      this.thumbVisibility = true,
-      this.selectedRowSubWidgetBuilder,
-      this.decorationConfiguration = const SpargoTableDecorationConfig(),
-      this.child,
-      this.getIsRowMarked});
+  const SpargoTable({
+    super.key,
+    required this.data,
+    required this.configuration,
+    this.maxHeight,
+    this.selectedRow,
+    this.onRowTap,
+    this.thumbVisibility = true,
+    this.selectedRowSubWidgetBuilder,
+    this.decorationConfiguration = const SpargoTableDecorationConfig(),
+    this.child,
+    this.getIsRowMarked,
+  });
 
   final List<T> data;
   final T? selectedRow;
@@ -291,7 +292,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                         columnWidths: widget.columnWidths,
                         buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
                         colorRow: colorRow,
-                        showBottomBorder: widget.decorationConfiguration.showBottomBorderBetweenRows,
+                        bottomRowBorder: widget.decorationConfiguration.bottomBorderBetweenRows ?? const Border(),
                       ),
                     );
                   },
