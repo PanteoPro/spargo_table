@@ -15,6 +15,8 @@ class SpargoTableDecorationConfig {
     this.cursorColor,
     this.scrollbarBottomHeight = 8,
     this.bottomPaddingForScrollbar = 12,
+    this.showBottomBorderBetweenRows,
+    this.borderRadius,
   });
   final bool colorRowsBetweenRows;
 
@@ -51,4 +53,9 @@ class SpargoTableDecorationConfig {
 
   /// Отступ для нижнего scrollbar
   final double bottomPaddingForScrollbar;
+
+  /// если не будет передан параметр (null), то граница между строкаим отображаться не будет
+  final bool? showBottomBorderBetweenRows;
+
+  final BorderRadius? borderRadius;
 }

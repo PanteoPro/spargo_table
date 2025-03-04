@@ -32,11 +32,13 @@ class SpargoTableHeaderWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-          color: decorationConfig.headerBackground,
-          border: decorationConfig.headerBorder ??
-              Border(
-                  bottom: BorderSide(
-                      color: Theme.of(context).colorScheme.outline))),
+        color: decorationConfig.headerBackground,
+        border: decorationConfig.headerBorder ??
+            Border(
+                bottom:
+                    BorderSide(color: Theme.of(context).colorScheme.outline)),
+        borderRadius: decorationConfig.borderRadius,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
