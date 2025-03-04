@@ -15,8 +15,9 @@ class SpargoTableDecorationConfig {
     this.cursorColor,
     this.scrollbarBottomHeight = 8,
     this.bottomPaddingForScrollbar = 12,
-    this.showBottomBorderBetweenRows,
-    this.borderRadius,
+    this.showBottomBorderBetweenRows = true,
+    this.tableBorderRadius,
+    this.headerBorderRadius,
     this.rowIsMarkedColor,
   });
   final bool colorRowsBetweenRows;
@@ -27,7 +28,7 @@ class SpargoTableDecorationConfig {
   /// Цвет чет строки
   final Color? colorEvenItems;
 
-  /// цвет, в который будет окрашена строка таблицы,если для нее будет определено и выполнено (true) условие isMarked внутри _ContentWidget
+  /// Цвет, в который будет окрашена строка таблицы,если для нее будет определено и выполнено (true) условие isMarked внутри _ContentWidget
   final Color? rowIsMarkedColor;
 
   /// Цвет шапки таблицы
@@ -58,8 +59,12 @@ class SpargoTableDecorationConfig {
   /// Отступ для нижнего scrollbar
   final double bottomPaddingForScrollbar;
 
-  /// если не будет передан параметр (null), то граница между строкаим отображаться не будет
-  final bool? showBottomBorderBetweenRows;
+  /// Нужна ли граница между строками таблицы
+  final bool showBottomBorderBetweenRows;
 
-  final BorderRadius? borderRadius;
+  /// Значение радиуса угла таблицы
+  final BorderRadius? tableBorderRadius;
+
+  /// Значение радиуса угла шапки таблицы
+  final BorderRadius? headerBorderRadius;
 }

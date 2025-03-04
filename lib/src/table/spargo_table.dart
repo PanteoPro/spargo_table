@@ -23,7 +23,7 @@ class SpargoTable<T> extends StatefulWidget {
       this.selectedRowSubWidgetBuilder,
       this.decorationConfiguration = const SpargoTableDecorationConfig(),
       this.child,
-      this.isMarked});
+      this.getIsRowMarked});
 
   final List<T> data;
   final T? selectedRow;
@@ -31,7 +31,7 @@ class SpargoTable<T> extends StatefulWidget {
   final SpargoTableDecorationConfig decorationConfiguration;
 
   final void Function(T model)? onRowTap;
-  final bool Function(T model)? isMarked;
+  final bool Function(T model)? getIsRowMarked;
   final SubRowWidget<T>? selectedRowSubWidgetBuilder;
   final bool thumbVisibility;
   final double? maxHeight;
@@ -85,13 +85,11 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                 return Container(
                   decoration: BoxDecoration(
                       border: widget.decorationConfiguration.borderTable,
-                      borderRadius:
-                          widget.decorationConfiguration.borderRadius),
+                      borderRadius: widget.decorationConfiguration.tableBorderRadius),
                   child: Scrollbar(
                     controller: vm.horizontalScrollController,
                     thumbVisibility: widget.thumbVisibility,
-                    thickness:
-                        widget.decorationConfiguration.scrollbarBottomHeight,
+                    thickness: widget.decorationConfiguration.scrollbarBottomHeight,
                     child: SingleChildScrollView(
                       key: vm.tableKey,
                       controller: vm.horizontalScrollController,
@@ -100,123 +98,73 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                           valueListenable: vm.maxHeightNotifier,
                           builder: (context, maxHeight, _) {
                             return ValueListenableBuilder(
-                                valueListenable:
-                                    vm.isDisplayedHorizontalScrollNotifier,
-                                builder:
-                                    (context, isDisplayedHorizontalScroll, _) {
+                                valueListenable: vm.isDisplayedHorizontalScrollNotifier,
+                                builder: (context, isDisplayedHorizontalScroll, _) {
                                   return ValueListenableBuilder(
                                       valueListenable: vm.columnWidthsNotifier,
                                       builder: (context, columnWidths, _) {
-                                        if (!listEquals(vm.currentColumnWidths,
-                                            columnWidths)) {
-                                          vm.setCurrentColumnWidths(
-                                              columnWidths);
-                                          WidgetsBinding.instance
-                                              .addPostFrameCallback((_) {
+                                        if (!listEquals(vm.currentColumnWidths, columnWidths)) {
+                                          vm.setCurrentColumnWidths(columnWidths);
+                                          WidgetsBinding.instance.addPostFrameCallback((_) {
                                             vm.setSizes();
                                           });
                                         }
-                                        final addedHeightBySubWidget = widget
-                                                        .selectedRow !=
-                                                    null &&
-                                                widget.selectedRowSubWidgetBuilder !=
-                                                    null
-                                            ? 70
-                                            : 0;
-                                        double heightContentTable =
-                                            (heightRow != null
-                                                    ? min(
-                                                        maxHeight ?? 9999999,
-                                                        heightRow *
-                                                            widget.data.length)
-                                                    : (maxHeight ??
-                                                        widget.maxHeight ??
-                                                        300)) +
-                                                addedHeightBySubWidget;
-                                        if (heightContentTable <
-                                                (maxHeight ??
-                                                    widget.maxHeight ??
-                                                    300) &&
+                                        final addedHeightBySubWidget =
+                                            widget.selectedRow != null && widget.selectedRowSubWidgetBuilder != null
+                                                ? 70
+                                                : 0;
+                                        double heightContentTable = (heightRow != null
+                                                ? min(maxHeight ?? 9999999, heightRow * widget.data.length)
+                                                : (maxHeight ?? widget.maxHeight ?? 300)) +
+                                            addedHeightBySubWidget;
+                                        if (heightContentTable < (maxHeight ?? widget.maxHeight ?? 300) &&
                                             isDisplayedHorizontalScroll) {
                                           final addedHeight = min(
-                                              (maxHeight ??
-                                                      widget.maxHeight ??
-                                                      300) -
-                                                  heightContentTable,
-                                              widget.decorationConfiguration
-                                                  .bottomPaddingForScrollbar);
+                                              (maxHeight ?? widget.maxHeight ?? 300) - heightContentTable,
+                                              widget.decorationConfiguration.bottomPaddingForScrollbar);
                                           heightContentTable += addedHeight;
                                         }
                                         return Column(
                                           children: [
                                             SpargoTableHeaderWidget(
-                                              decorationConfig: widget
-                                                  .decorationConfiguration,
+                                              decorationConfig: widget.decorationConfiguration,
                                               maxHeight: vm.heightHeader,
                                               key: vm.headerKey,
-                                              columns:
-                                                  widget.configuration.columns,
+                                              columns: widget.configuration.columns,
                                               columnWidths: columnWidths,
-                                              onStartResizeColumn:
-                                                  vm.onStartResizeColumn,
-                                              onMoveResizeColumn:
-                                                  vm.onMoveResizeColumn,
-                                              onEndResizeColumn:
-                                                  vm.onEndResizeColumn,
+                                              onStartResizeColumn: vm.onStartResizeColumn,
+                                              onMoveResizeColumn: vm.onMoveResizeColumn,
+                                              onEndResizeColumn: vm.onEndResizeColumn,
                                             ),
                                             SelectionArea(
                                               child: SizedBox(
                                                 height: heightContentTable,
                                                 width: vm.tableWidth,
                                                 child: ValueListenableBuilder(
-                                                    valueListenable:
-                                                        vm.filteredDataNotifier,
-                                                    builder: (context,
-                                                        filteredData, _) {
+                                                    valueListenable: vm.filteredDataNotifier,
+                                                    builder: (context, filteredData, _) {
                                                       return ValueListenableBuilder(
-                                                          valueListenable: vm
-                                                              .sortedDataNotifier,
-                                                          builder: (context,
-                                                              sortedData, _) {
+                                                          valueListenable: vm.sortedDataNotifier,
+                                                          builder: (context, sortedData, _) {
                                                             final dataForRender =
-                                                                sortedData ??
-                                                                    filteredData ??
-                                                                    widget.data;
-                                                            return _ContentWidget<
-                                                                T>(
-                                                              heightRow:
-                                                                  heightRow,
-                                                              dataForRender:
-                                                                  dataForRender,
-                                                              verticalScrollController:
-                                                                  vm.verticalScrollController,
-                                                              columnWidths:
-                                                                  columnWidths,
-                                                              decorationConfiguration:
-                                                                  widget
-                                                                      .decorationConfiguration,
-                                                              thumbVisibility:
-                                                                  widget
-                                                                      .thumbVisibility,
-                                                              selectedRow: widget
-                                                                  .selectedRow,
-                                                              selectedRowIndex:
-                                                                  vm.selectedRowIndex,
-                                                              onRowTap: widget
-                                                                  .onRowTap,
-                                                              isMarked: widget
-                                                                  .isMarked,
-                                                              configuration: widget
-                                                                  .configuration,
+                                                                sortedData ?? filteredData ?? widget.data;
+                                                            return _ContentWidget<T>(
+                                                              heightRow: heightRow,
+                                                              dataForRender: dataForRender,
+                                                              verticalScrollController: vm.verticalScrollController,
+                                                              columnWidths: columnWidths,
+                                                              decorationConfiguration: widget.decorationConfiguration,
+                                                              thumbVisibility: widget.thumbVisibility,
+                                                              selectedRow: widget.selectedRow,
+                                                              selectedRowIndex: vm.selectedRowIndex,
+                                                              onRowTap: widget.onRowTap,
+                                                              getIsRowMarked: widget.getIsRowMarked,
+                                                              configuration: widget.configuration,
                                                               selectedRowSubWidgetBuilder:
-                                                                  widget
-                                                                      .selectedRowSubWidgetBuilder,
-                                                              buildSizeCallback:
-                                                                  vm.buildSizeCallback,
-                                                              isDisplayedHorizontalScroll:
-                                                                  isDisplayedHorizontalScroll,
-                                                              child:
-                                                                  widget.child,
+                                                                  widget.selectedRowSubWidgetBuilder,
+                                                              buildSizeCallback: vm.buildSizeCallback,
+                                                              isDisplayedHorizontalScroll: isDisplayedHorizontalScroll,
+                                                              child: widget.child,
                                                             );
                                                           });
                                                     }),
@@ -254,7 +202,7 @@ class _ContentWidget<T> extends StatefulWidget {
     required this.buildSizeCallback,
     required this.isDisplayedHorizontalScroll,
     required this.child,
-    required this.isMarked,
+    required this.getIsRowMarked,
   });
 
   final double? heightRow;
@@ -271,7 +219,7 @@ class _ContentWidget<T> extends StatefulWidget {
   final void Function(Size size) buildSizeCallback;
   final bool isDisplayedHorizontalScroll;
   final Widget? child;
-  final bool Function(T model)? isMarked;
+  final bool Function(T model)? getIsRowMarked;
 
   @override
   State<_ContentWidget<T>> createState() => _ContentWidgetState<T>();
@@ -283,8 +231,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final renderBoxRow =
-          _key.currentContext?.findRenderObject() as RenderBox?;
+      final renderBoxRow = _key.currentContext?.findRenderObject() as RenderBox?;
       if (renderBoxRow != null) {
         widget.buildSizeCallback(renderBoxRow.size);
       }
@@ -294,10 +241,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
   @override
   Widget build(BuildContext context) {
     final itemsCount = widget.dataForRender.length +
-        (widget.selectedRowSubWidgetBuilder != null &&
-                widget.dataForRender.contains(widget.selectedRow)
-            ? 1
-            : 0);
+        (widget.selectedRowSubWidgetBuilder != null && widget.dataForRender.contains(widget.selectedRow) ? 1 : 0);
     return Column(
       children: [
         if (widget.dataForRender.isNotEmpty)
@@ -308,32 +252,26 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
               child: Padding(
                 padding: EdgeInsets.only(
                     bottom: widget.isDisplayedHorizontalScroll
-                        ? widget
-                            .decorationConfiguration.bottomPaddingForScrollbar
+                        ? widget.decorationConfiguration.bottomPaddingForScrollbar
                         : 0),
                 child: ListView.builder(
                   physics: const ClampingScrollPhysics(),
                   controller: widget.verticalScrollController,
                   itemExtent: widget.heightRow,
                   itemBuilder: (context, index) {
-                    final colorRow = (widget.isMarked != null &&
-                            widget.isMarked!(widget.dataForRender[index]))
-                        ? widget.decorationConfiguration.rowIsMarkedColor
-                        : widget.decorationConfiguration.colorRowsBetweenRows
-                            ? (index % 2 == 0
-                                ? widget.decorationConfiguration.colorOddItems
-                                : widget.decorationConfiguration
-                                        .colorEvenItems ??
-                                    Colors.grey.withAlpha(210))
-                            : null;
+                    final colorRow =
+                        (widget.getIsRowMarked != null && widget.getIsRowMarked!(widget.dataForRender[index]))
+                            ? widget.decorationConfiguration.rowIsMarkedColor
+                            : widget.decorationConfiguration.colorRowsBetweenRows
+                                ? (index % 2 == 0
+                                    ? widget.decorationConfiguration.colorOddItems
+                                    : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withAlpha(210))
+                                : null;
                     int resultIndex = index;
-                    if (widget.selectedRowSubWidgetBuilder != null &&
-                        widget.selectedRowIndex == index - 1) {
-                      return widget.selectedRowSubWidgetBuilder!(
-                          widget.dataForRender[index - 1]);
+                    if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRowIndex == index - 1) {
+                      return widget.selectedRowSubWidgetBuilder!(widget.dataForRender[index - 1]);
                     }
-                    if (widget.selectedRowIndex != null &&
-                            widget.selectedRowSubWidgetBuilder != null
+                    if (widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null
                         ? index > widget.selectedRowIndex!
                         : false) {
                       resultIndex--;
@@ -341,26 +279,19 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
 
                     return Padding(
                       padding: EdgeInsets.only(
-                          bottom: index == itemsCount - 1 &&
-                                  widget.isDisplayedHorizontalScroll
-                              ? widget.decorationConfiguration
-                                  .bottomPaddingForScrollbar
+                          bottom: index == itemsCount - 1 && widget.isDisplayedHorizontalScroll
+                              ? widget.decorationConfiguration.bottomPaddingForScrollbar
                               : 0),
                       child: SpargoTableRowWidget(
                         key: index == 0 ? _key : null,
-                        isSelected: widget.selectedRow ==
-                            widget.dataForRender[resultIndex],
-                        onRowTap: widget.onRowTap != null
-                            ? () => widget
-                                .onRowTap!(widget.dataForRender[resultIndex])
-                            : null,
+                        isSelected: widget.selectedRow == widget.dataForRender[resultIndex],
+                        onRowTap:
+                            widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[resultIndex]) : null,
                         columns: widget.configuration.columns,
                         columnWidths: widget.columnWidths,
-                        buildRow: () => widget.configuration
-                            .buildRow(widget.dataForRender[resultIndex]),
+                        buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
                         colorRow: colorRow,
-                        showBottomBorder: widget.decorationConfiguration
-                            .showBottomBorderBetweenRows,
+                        showBottomBorder: widget.decorationConfiguration.showBottomBorderBetweenRows,
                       ),
                     );
                   },
