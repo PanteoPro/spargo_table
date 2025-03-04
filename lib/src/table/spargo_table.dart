@@ -292,7 +292,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                         columnWidths: widget.columnWidths,
                         buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
                         colorRow: colorRow,
-                        bottomRowBorder: widget.decorationConfiguration.bottomBorderBetweenRows ?? const Border(),
+                        border: widget.decorationConfiguration.borderRow,
                       ),
                     );
                   },

@@ -15,7 +15,7 @@ class SpargoTableDecorationConfig {
     this.cursorColor,
     this.scrollbarBottomHeight = 8,
     this.bottomPaddingForScrollbar = 12,
-    this.bottomBorderBetweenRows,
+    this.borderRow,
     this.tableBorderRadius,
     this.headerBorderRadius,
     this.rowIsMarkedColor,
@@ -36,8 +36,10 @@ class SpargoTableDecorationConfig {
   /// Цвет шапки таблицы
   final Color? headerBackground;
 
+  /// Рамка заголовка
   final Border? headerBorder;
 
+  /// Рамка таблицы
   final Border? borderTable;
 
   /// Цвет иконки сортировка и фильтрации
@@ -61,8 +63,8 @@ class SpargoTableDecorationConfig {
   /// Отступ для нижнего scrollbar
   final double bottomPaddingForScrollbar;
 
-  /// Граница между строками таблицы
-  final Border? bottomBorderBetweenRows;
+  /// Рамка строки
+  final Border? borderRow;
 
   /// Значение радиуса угла таблицы
   final BorderRadius? tableBorderRadius;

@@ -1,3 +1,9 @@
+## 0.0.5
+* Introduced new properties to the ```SpargoTableDecorationConfig``` class:
+    * ```borderRow```: Allows customization of the border for table rows.
+    * ```tableBorderRadius```: Enables setting the border radius for the entire table.
+    * ```headerBorderRadius```: Provides the ability to define the border radius specifically for the table header.
+
 ## 0.0.4
 * Fix last row render
 
