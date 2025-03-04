@@ -32,11 +32,11 @@ class SpargoTableHeaderWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-          color: decorationConfig.headerBackground,
-          border: decorationConfig.headerBorder ??
-              Border(
-                  bottom: BorderSide(
-                      color: Theme.of(context).colorScheme.outline))),
+        color: decorationConfig.headerBackground,
+        border:
+            decorationConfig.headerBorder ?? Border(bottom: BorderSide(color: Theme.of(context).colorScheme.outline)),
+        borderRadius: decorationConfig.headerBorderRadius,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -55,29 +55,23 @@ class SpargoTableHeaderWidget<T> extends StatelessWidget {
                     child: MouseRegion(
                       cursor: MouseCursor.defer,
                       child: Listener(
-                        onPointerDown: (event) =>
-                            onStartResizeColumn(event, index),
+                        onPointerDown: (event) => onStartResizeColumn(event, index),
                         onPointerUp: (event) => onEndResizeColumn(event, index),
-                        onPointerMove: (event) =>
-                            onMoveResizeColumn(event, index),
+                        onPointerMove: (event) => onMoveResizeColumn(event, index),
                         child: Tooltip(
                           message: 'Изменить размер',
                           child: Material(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(8)),
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
                             color: Colors.transparent,
                             child: InkWell(
                               mouseCursor: SystemMouseCursors.click,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(8)),
+                              borderRadius: const BorderRadius.all(Radius.circular(8)),
                               onTap: () {},
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 6),
+                                padding: const EdgeInsets.symmetric(horizontal: 6),
                                 child: Container(
                                   width: 1,
-                                  height:
-                                      maxHeight != null ? maxHeight! - 8 : 35,
+                                  height: maxHeight != null ? maxHeight! - 8 : 35,
                                   color: Theme.of(context).colorScheme.outline,
                                 ),
                               ),
@@ -168,11 +162,7 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
   Widget build(BuildContext context) {
     final textWidget = Text(
       widget.config.name,
-      style: widget.config.style ??
-          Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+      style: widget.config.style ?? Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
       maxLines: 3,
       textAlign: TextAlign.start,
     );
@@ -198,11 +188,9 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-                color: widget.decorationConfig.focusBorderTextFieldColor ??
-                    Theme.of(context).colorScheme.outline),
+                color: widget.decorationConfig.focusBorderTextFieldColor ?? Theme.of(context).colorScheme.outline),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         ),
       );
     }
@@ -214,9 +202,7 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: isEditMode == false
-                  ? interactiveWidget ?? textWidget
-                  : textField!,
+              child: isEditMode == false ? interactiveWidget ?? textWidget : textField!,
             ),
             if (widget.config.sortBy != null)
               ValueListenableBuilder(
@@ -228,8 +214,7 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () =>
-                            toggleSort(isSelect ? sortModel?.type : null),
+                        onTap: () => toggleSort(isSelect ? sortModel?.type : null),
                         child: Tooltip(
                             message: 'Применить сортировку',
                             child: Transform.rotate(
@@ -241,8 +226,7 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
                               child: Icon(
                                 Icons.sort,
                                 color: isSelect
-                                    ? widget.decorationConfig
-                                            .activeIconHeaderColor ??
+                                    ? widget.decorationConfig.activeIconHeaderColor ??
                                         Theme.of(context).colorScheme.primary
                                     : widget.decorationConfig.iconHeaderColor,
                                 size: 20,
@@ -275,8 +259,7 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
                               icon,
                               size: 20,
                               color: value?.isNotEmpty ?? false
-                                  ? widget.decorationConfig
-                                          .activeIconHeaderColor ??
+                                  ? widget.decorationConfig.activeIconHeaderColor ??
                                       Theme.of(context).colorScheme.primary
                                   : widget.decorationConfig.iconHeaderColor,
                             )),

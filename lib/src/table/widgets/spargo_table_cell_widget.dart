@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SpargoTableCellWidget extends StatelessWidget {
-  const SpargoTableCellWidget(
-      {super.key, required this.width, required this.child});
+  const SpargoTableCellWidget({super.key, required this.width, required this.child});
 
   final double width;
   final Widget child;
@@ -15,11 +14,9 @@ class SpargoTableCellWidget extends StatelessWidget {
       child: Center(
         child: Theme(
           data: Theme.of(context).copyWith(
-            textTheme: Theme.of(context).textTheme.copyWith(
-                bodyLarge: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(fontSize: 40)),
+            textTheme: Theme.of(context)
+                .textTheme
+                .copyWith(bodyLarge: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 40)),
           ),
           child: ClipRect(
             child: Row(

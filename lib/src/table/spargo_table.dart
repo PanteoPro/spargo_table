@@ -23,6 +23,7 @@ class SpargoTable<T> extends StatefulWidget {
     this.selectedRowSubWidgetBuilder,
     this.decorationConfiguration = const SpargoTableDecorationConfig(),
     this.child,
+    this.getIsRowMarked,
   });
 
   final List<T> data;
@@ -31,6 +32,7 @@ class SpargoTable<T> extends StatefulWidget {
   final SpargoTableDecorationConfig decorationConfiguration;
 
   final void Function(T model)? onRowTap;
+  final bool Function(T model)? getIsRowMarked;
   final SubRowWidget<T>? selectedRowSubWidgetBuilder;
   final bool thumbVisibility;
   final double? maxHeight;
@@ -83,8 +85,8 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
               builder: (context, heightRow, _) {
                 return Container(
                   decoration: BoxDecoration(
-                    border: widget.decorationConfiguration.borderTable,
-                  ),
+                      border: widget.decorationConfiguration.borderTable,
+                      borderRadius: widget.decorationConfiguration.tableBorderRadius),
                   child: Scrollbar(
                     controller: vm.horizontalScrollController,
                     thumbVisibility: widget.thumbVisibility,
@@ -157,6 +159,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                                               selectedRow: widget.selectedRow,
                                                               selectedRowIndex: vm.selectedRowIndex,
                                                               onRowTap: widget.onRowTap,
+                                                              getIsRowMarked: widget.getIsRowMarked,
                                                               configuration: widget.configuration,
                                                               selectedRowSubWidgetBuilder:
                                                                   widget.selectedRowSubWidgetBuilder,
@@ -200,6 +203,7 @@ class _ContentWidget<T> extends StatefulWidget {
     required this.buildSizeCallback,
     required this.isDisplayedHorizontalScroll,
     required this.child,
+    required this.getIsRowMarked,
   });
 
   final double? heightRow;
@@ -216,6 +220,7 @@ class _ContentWidget<T> extends StatefulWidget {
   final void Function(Size size) buildSizeCallback;
   final bool isDisplayedHorizontalScroll;
   final Widget? child;
+  final bool Function(T model)? getIsRowMarked;
 
   @override
   State<_ContentWidget<T>> createState() => _ContentWidgetState<T>();
@@ -255,11 +260,14 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                   controller: widget.verticalScrollController,
                   itemExtent: widget.heightRow,
                   itemBuilder: (context, index) {
-                    final colorRow = widget.decorationConfiguration.colorRowsBetweenRows
-                        ? index % 2 == 0
-                            ? widget.decorationConfiguration.colorOddItems
-                            : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withValues(alpha: 210)
-                        : null;
+                    final colorRow =
+                        (widget.getIsRowMarked != null && widget.getIsRowMarked!(widget.dataForRender[index]))
+                            ? widget.decorationConfiguration.rowIsMarkedColor
+                            : widget.decorationConfiguration.colorRowsBetweenRows
+                                ? (index % 2 == 0
+                                    ? widget.decorationConfiguration.colorOddItems
+                                    : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withAlpha(210))
+                                : null;
                     int resultIndex = index;
                     if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRowIndex == index - 1) {
                       return widget.selectedRowSubWidgetBuilder!(widget.dataForRender[index - 1]);
@@ -284,6 +292,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                         columnWidths: widget.columnWidths,
                         buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
                         colorRow: colorRow,
+                        bottomRowBorder: widget.decorationConfiguration.bottomBorderBetweenRows ?? const Border(),
                       ),
                     );
                   },

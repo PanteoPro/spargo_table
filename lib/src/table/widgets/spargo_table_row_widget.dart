@@ -12,6 +12,8 @@ class SpargoTableRowWidget extends StatelessWidget {
     required this.onRowTap,
     required this.isSelected,
     required this.colorRow,
+    required this.bottomRowBorder,
+
   });
 
   final List<SpargoTableColumnConfig> columns;
@@ -20,27 +22,24 @@ class SpargoTableRowWidget extends StatelessWidget {
   final void Function()? onRowTap;
   final bool isSelected;
   final Color? colorRow;
+  final Border bottomRowBorder;
+
 
   @override
   Widget build(BuildContext context) {
     final cells = buildRow();
     return Material(
-      color: isSelected
-          ? Theme.of(context).colorScheme.primary
-          : colorRow ?? Colors.white,
+      color: isSelected ? Theme.of(context).colorScheme.primary : colorRow ?? Colors.white,
       child: InkWell(
         onTap: onRowTap,
         child: DecoratedBox(
           decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      color: Theme.of(context).colorScheme.outline))),
+              border: bottomRowBorder),
           child: Row(
             spacing: 17,
             children: [
               for (int i = 0; i < cells.length; i++)
-                SpargoTableCellWidget(
-                    width: columnWidths[i], child: cells[i].child)
+                SpargoTableCellWidget(width: columnWidths[i], child: cells[i].child)
             ],
           ),
         ),
