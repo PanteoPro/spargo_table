@@ -140,39 +140,37 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                               onMoveResizeColumn: vm.onMoveResizeColumn,
                                               onEndResizeColumn: vm.onEndResizeColumn,
                                             ),
-                                            SelectionArea(
-                                              child: SizedBox(
-                                                height: heightContentTable,
-                                                width: vm.tableWidth,
-                                                child: ValueListenableBuilder(
-                                                    valueListenable: vm.filteredDataNotifier,
-                                                    builder: (context, filteredData, _) {
-                                                      return ValueListenableBuilder(
-                                                          valueListenable: vm.sortedDataNotifier,
-                                                          builder: (context, sortedData, _) {
-                                                            final dataForRender =
-                                                                sortedData ?? filteredData ?? widget.data;
-                                                            return _ContentWidget<T>(
-                                                              heightRow: heightRow,
-                                                              dataForRender: dataForRender,
-                                                              verticalScrollController: vm.verticalScrollController,
-                                                              columnWidths: columnWidths,
-                                                              decorationConfiguration: widget.decorationConfiguration,
-                                                              thumbVisibility: widget.thumbVisibility,
-                                                              selectedRow: widget.selectedRow,
-                                                              selectedRowIndex: vm.selectedRowIndex,
-                                                              onRowTap: widget.onRowTap,
-                                                              getIsRowMarked: widget.getIsRowMarked,
-                                                              configuration: widget.configuration,
-                                                              selectedRowSubWidgetBuilder:
-                                                                  widget.selectedRowSubWidgetBuilder,
-                                                              buildSizeCallback: vm.buildSizeCallback,
-                                                              isDisplayedHorizontalScroll: isDisplayedHorizontalScroll,
-                                                              child: widget.child,
-                                                            );
-                                                          });
-                                                    }),
-                                              ),
+                                            SizedBox(
+                                              height: heightContentTable,
+                                              width: vm.tableWidth,
+                                              child: ValueListenableBuilder(
+                                                  valueListenable: vm.filteredDataNotifier,
+                                                  builder: (context, filteredData, _) {
+                                                    return ValueListenableBuilder(
+                                                        valueListenable: vm.sortedDataNotifier,
+                                                        builder: (context, sortedData, _) {
+                                                          final dataForRender =
+                                                              sortedData ?? filteredData ?? widget.data;
+                                                          return _ContentWidget<T>(
+                                                            heightRow: heightRow,
+                                                            dataForRender: dataForRender,
+                                                            verticalScrollController: vm.verticalScrollController,
+                                                            columnWidths: columnWidths,
+                                                            decorationConfiguration: widget.decorationConfiguration,
+                                                            thumbVisibility: widget.thumbVisibility,
+                                                            selectedRow: widget.selectedRow,
+                                                            selectedRowIndex: vm.selectedRowIndex,
+                                                            onRowTap: widget.onRowTap,
+                                                            getIsRowMarked: widget.getIsRowMarked,
+                                                            configuration: widget.configuration,
+                                                            selectedRowSubWidgetBuilder:
+                                                                widget.selectedRowSubWidgetBuilder,
+                                                            buildSizeCallback: vm.buildSizeCallback,
+                                                            isDisplayedHorizontalScroll: isDisplayedHorizontalScroll,
+                                                            child: widget.child,
+                                                          );
+                                                        });
+                                                  }),
                                             ),
                                           ],
                                         );
@@ -253,47 +251,50 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
             child: Scrollbar(
               controller: widget.verticalScrollController,
               thumbVisibility: widget.thumbVisibility,
+              // thickness: 100,
               child: Padding(
                 padding: EdgeInsets.only(
                     bottom: widget.isDisplayedHorizontalScroll
                         ? widget.decorationConfiguration.bottomPaddingForScrollbar
                         : 0),
-                child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  controller: widget.verticalScrollController,
-                  itemExtent: widget.heightRow,
-                  itemBuilder: (context, index) {
-                    final colorRow =
-                        (widget.getIsRowMarked != null && widget.getIsRowMarked!(widget.dataForRender[index]))
-                            ? widget.decorationConfiguration.rowIsMarkedColor
-                            : widget.decorationConfiguration.colorRowsBetweenRows
-                                ? (index % 2 == 0
-                                    ? widget.decorationConfiguration.colorOddItems
-                                    : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withAlpha(210))
-                                : null;
-                    int resultIndex = index;
-                    if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRowIndex == index - 1) {
-                      return widget.selectedRowSubWidgetBuilder!(widget.dataForRender[index - 1]);
-                    }
-                    if (widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null
-                        ? index > widget.selectedRowIndex!
-                        : false) {
-                      resultIndex--;
-                    }
+                child: SelectionArea(
+                  child: ListView.builder(
+                    physics: const ClampingScrollPhysics(),
+                    controller: widget.verticalScrollController,
+                    itemExtent: widget.heightRow,
+                    itemBuilder: (context, index) {
+                      final colorRow =
+                          (widget.getIsRowMarked != null && widget.getIsRowMarked!(widget.dataForRender[index]))
+                              ? widget.decorationConfiguration.rowIsMarkedColor
+                              : widget.decorationConfiguration.colorRowsBetweenRows
+                                  ? (index % 2 == 0
+                                      ? widget.decorationConfiguration.colorOddItems
+                                      : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withAlpha(210))
+                                  : null;
+                      int resultIndex = index;
+                      if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRowIndex == index - 1) {
+                        return widget.selectedRowSubWidgetBuilder!(widget.dataForRender[index - 1]);
+                      }
+                      if (widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null
+                          ? index > widget.selectedRowIndex!
+                          : false) {
+                        resultIndex--;
+                      }
 
-                    return SpargoTableRowWidget(
-                      key: index == 0 ? _key : null,
-                      isSelected: widget.selectedRow == widget.dataForRender[resultIndex],
-                      onRowTap:
-                          widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[resultIndex]) : null,
-                      columns: widget.configuration.columns,
-                      columnWidths: widget.columnWidths,
-                      buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
-                      colorRow: colorRow,
-                      border: widget.decorationConfiguration.borderRow,
-                    );
-                  },
-                  itemCount: itemsCount,
+                      return SpargoTableRowWidget(
+                        key: index == 0 ? _key : null,
+                        isSelected: widget.selectedRow == widget.dataForRender[resultIndex],
+                        onRowTap:
+                            widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[resultIndex]) : null,
+                        columns: widget.configuration.columns,
+                        columnWidths: widget.columnWidths,
+                        buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
+                        colorRow: colorRow,
+                        border: widget.decorationConfiguration.borderRow,
+                      );
+                    },
+                    itemCount: itemsCount,
+                  ),
                 ),
               ),
             ),

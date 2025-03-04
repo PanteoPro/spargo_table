@@ -1,5 +1,8 @@
+## 0.0.8
+* Resolved an issue in the web version where dragging the scrollbar with the mouse caused text selection, making scrolling impossible. This fix ensures smooth and uninterrupted scrolling behavior when interacting with the scrollbar.
+
 ## 0.0.7
-* Adjusted row height behavior to ensure consistent height for rows when a horizontal scrollbar is present.
+* Updated the logic for determining the presence of a horizontal scrollbar. The sequence of checks has been modified to improve accuracy and ensure consistent behavior when detecting whether a horizontal scrollbar should be displayed.
 
 ## 0.0.6
 * Adjusted row height behavior to ensure consistent height for rows when a horizontal scrollbar is present.
@@ -11,7 +14,7 @@
     * ```headerBorderRadius```: Provides the ability to define the border radius specifically for the table header.
 
 ## 0.0.4
-* Fix last row render
+* Fixed an issue where the last row of the table was not rendering correctly. This ensures that all rows, including the last one, are displayed properly, maintaining the integrity of the table's layout and content.
 
 ## 0.0.3
 * Optimized and upgraded logic for changing column width.
@@ -25,4 +28,4 @@
 
 ## 0.0.1
 
-* Init Project
+* Init Project.
