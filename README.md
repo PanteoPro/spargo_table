@@ -15,7 +15,7 @@ Add the library to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  spargo_table: ^0.0.8
+  spargo_table: ^0.0.9
 ```
 
 Then run:
