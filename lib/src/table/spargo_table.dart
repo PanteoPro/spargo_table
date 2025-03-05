@@ -21,6 +21,7 @@ class SpargoTable<T> extends StatefulWidget {
     this.onRowTap,
     this.thumbVisibility = true,
     this.selectedRowSubWidgetBuilder,
+    this.maxHeightSubWidget,
     this.decorationConfiguration = const SpargoTableDecorationConfig(),
     this.child,
     this.getIsRowMarked,
@@ -36,6 +37,7 @@ class SpargoTable<T> extends StatefulWidget {
   final SubRowWidget<T>? selectedRowSubWidgetBuilder;
   final bool thumbVisibility;
   final double? maxHeight;
+  final double? maxHeightSubWidget;
   final Widget? child;
 
   @override
@@ -116,11 +118,13 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                                   vm.calculateMaxHeightTable();
                                                 });
                                               }
+                                              final heightSubWidget =
+                                                  widget.maxHeightSubWidget ?? addedHeightBySubWidget ?? 0;
                                               double heightContentTable = (heightRow != null
                                                   ? min(widget.maxHeight ?? maxHeight ?? 9999999,
-                                                      heightRow * widget.data.length + (addedHeightBySubWidget ?? 0))
+                                                      heightRow * widget.data.length + heightSubWidget)
                                                   : (maxHeight != null
-                                                      ? maxHeight + (addedHeightBySubWidget ?? 0)
+                                                      ? maxHeight + heightSubWidget
                                                       : widget.maxHeight ?? 300));
                                               if (heightContentTable < (maxHeight ?? widget.maxHeight ?? 300) &&
                                                   isDisplayedHorizontalScroll) {

@@ -1,3 +1,6 @@
+## 0.0.10
+* Added new property maxHeightSubWidget 
+
 ## 0.0.9
 #### Changed
 * Replaced ListView with CustomScrollView using SliverFixedExtentList and SliverToBoxAdapter.
