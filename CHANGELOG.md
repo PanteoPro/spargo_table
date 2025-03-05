@@ -1,3 +1,10 @@
+## 0.0.9
+#### Changed
+* Replaced ListView with CustomScrollView using SliverFixedExtentList and SliverToBoxAdapter.
+
+#### Added
+* The size of the selectedRowSubWidgetBuilder now influences the overall size of the table. This ensures that the table dynamically adjusts its dimensions based on the content provided by the selectedRowSubWidgetBuilder
+
 ## 0.0.8
 * Resolved an issue in the web version where dragging the scrollbar with the mouse caused text selection, making scrolling impossible. This fix ensures smooth and uninterrupted scrolling behavior when interacting with the scrollbar.
 

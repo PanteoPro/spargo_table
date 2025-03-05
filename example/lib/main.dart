@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:spargo_table/spargo_table.dart';
 
 void main() {
@@ -15,6 +17,37 @@ class DemoModel {
   final String value4;
   final String value5;
   final String value6;
+
+  @override
+  String toString() {
+    return 'DemoModel(id: $id)';
+  }
+
+  @override
+  bool operator ==(covariant DemoModel other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.name == name &&
+        other.value1 == value1 &&
+        other.value2 == value2 &&
+        other.value3 == value3 &&
+        other.value4 == value4 &&
+        other.value5 == value5 &&
+        other.value6 == value6;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        value1.hashCode ^
+        value2.hashCode ^
+        value3.hashCode ^
+        value4.hashCode ^
+        value5.hashCode ^
+        value6.hashCode;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -42,8 +75,36 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  DemoModel? selectedRow2;
+
   @override
   Widget build(BuildContext context) {
+    final data1 = List.generate(
+      100,
+      (index) => DemoModel(
+        index,
+        'name_$index',
+        'value_1_$index',
+        'value_2_$index',
+        'value_3_$index',
+        'value_4_$index',
+        'value_5_$index',
+        'value_6_$index',
+      ),
+    );
+    final data2 = List.generate(
+      10,
+      (index) => DemoModel(
+        index,
+        'name_$index',
+        'value_1_$index',
+        'value_2_$index',
+        'value_3_$index',
+        'value_4_$index',
+        'value_5_$index',
+        'value_6_$index',
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -53,69 +114,79 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              // SpargoTable<DemoModel>(
+              //   maxHeight: 472,
+              //   selectedRowSubWidgetBuilder: (model) => Container(
+              //     color: Colors.red,
+              //     child: Column(
+              //       children: [
+              //         Text('test'),
+              //         Text('test'),
+              //         Text('test'),
+              //       ],
+              //     ),
+              //   ),
+              //   selectedRow: data1[27],
+              //   data: data1,
+              //   configuration: SpargoTableConfig(
+              //     columns: [
+              //       SpargoTableColumnConfig(name: 'Id'),
+              //       SpargoTableColumnConfig(name: 'Name'),
+              //       SpargoTableColumnConfig(name: 'Value1'),
+              //       SpargoTableColumnConfig(name: 'Value2'),
+              //       SpargoTableColumnConfig(name: 'Value3'),
+              //       SpargoTableColumnConfig(name: 'Value4'),
+              //       SpargoTableColumnConfig(name: 'Value5'),
+              //       SpargoTableColumnConfig(name: 'Value6'),
+              //     ],
+              //     buildRow: (model) => [
+              //       SpargoTableCellConfig(
+              //           child: Column(
+              //         children: [
+              //           Text(model.id.toString()),
+              //           Text(model.id.toString()),
+              //         ],
+              //       )),
+              //       SpargoTableCellConfig(child: Text(model.name.toString())),
+              //       SpargoTableCellConfig(child: Text(model.value1.toString())),
+              //       SpargoTableCellConfig(child: Text(model.value2.toString())),
+              //       SpargoTableCellConfig(child: Text(model.value3.toString())),
+              //       SpargoTableCellConfig(child: Text(model.value4.toString())),
+              //       SpargoTableCellConfig(child: Text(model.value5.toString())),
+              //       SpargoTableCellConfig(child: Text(model.value6.toString())),
+              //     ],
+              //   ),
+              // ),
               SpargoTable<DemoModel>(
                 maxHeight: 472,
-                data: List.generate(
-                  100,
-                  (index) => DemoModel(
-                    index,
-                    'name_$index',
-                    'value_1_$index',
-                    'value_2_$index',
-                    'value_3_$index',
-                    'value_4_$index',
-                    'value_5_$index',
-                    'value_6_$index',
+                data: data2,
+                onRowTap: (model) => setState(() => selectedRow2 = model),
+                selectedRow: selectedRow2,
+                selectedRowSubWidgetBuilder: (model) => Container(
+                  color: Colors.red,
+                  child: Column(
+                    children: [
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      Text('test'),
+                      for (int i = 0; i < model.id; i++) Text('test'),
+                    ],
                   ),
                 ),
                 configuration: SpargoTableConfig(
                   columns: [
-                    SpargoTableColumnConfig(name: 'Id'),
-                    SpargoTableColumnConfig(name: 'Name'),
-                    SpargoTableColumnConfig(name: 'Value1'),
-                    SpargoTableColumnConfig(name: 'Value2'),
-                    SpargoTableColumnConfig(name: 'Value3'),
-                    SpargoTableColumnConfig(name: 'Value4'),
-                    SpargoTableColumnConfig(name: 'Value5'),
-                    SpargoTableColumnConfig(name: 'Value6'),
-                  ],
-                  buildRow: (model) => [
-                    SpargoTableCellConfig(
-                        child: Column(
-                      children: [
-                        Text(model.id.toString()),
-                        Text(model.id.toString()),
-                      ],
-                    )),
-                    SpargoTableCellConfig(child: Text(model.name.toString())),
-                    SpargoTableCellConfig(child: Text(model.value1.toString())),
-                    SpargoTableCellConfig(child: Text(model.value2.toString())),
-                    SpargoTableCellConfig(child: Text(model.value3.toString())),
-                    SpargoTableCellConfig(child: Text(model.value4.toString())),
-                    SpargoTableCellConfig(child: Text(model.value5.toString())),
-                    SpargoTableCellConfig(child: Text(model.value6.toString())),
-                  ],
-                ),
-              ),
-              SpargoTable<DemoModel>(
-                maxHeight: 472,
-                data: List.generate(
-                  1,
-                  (index) => DemoModel(
-                    index,
-                    'name_$index',
-                    'value_1_$index',
-                    'value_2_$index',
-                    'value_3_$index',
-                    'value_4_$index',
-                    'value_5_$index',
-                    'value_6_$index',
-                  ),
-                ),
-                configuration: SpargoTableConfig(
-                  columns: [
-                    SpargoTableColumnConfig(name: 'Id'),
-                    SpargoTableColumnConfig(name: 'Name'),
+                    SpargoTableColumnConfig(
+                      name: 'Id',
+                      queryFilter: (query, model) => model.id.toString().contains(query),
+                    ),
+                    SpargoTableColumnConfig(name: 'Name', sortBy: (_, __, ___) => 1),
                     SpargoTableColumnConfig(name: 'Value1'),
                     SpargoTableColumnConfig(name: 'Value2'),
                     SpargoTableColumnConfig(name: 'Value3'),

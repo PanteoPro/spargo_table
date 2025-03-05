@@ -54,7 +54,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
   @override
   void initState() {
     super.initState();
-    vm.init();
+    vm.init(widget);
   }
 
   @override
@@ -79,7 +79,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
             vm.setCurrentConstraints(constraints);
             WidgetsBinding.instance.addPostFrameCallback((_) {
               vm.setIsDisplayedHorizontalScroll();
-              vm.setSizes();
+              vm.calculateMaxHeightTable();
             });
           }
           return ValueListenableBuilder(
@@ -104,76 +104,80 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                 valueListenable: vm.isDisplayedHorizontalScrollNotifier,
                                 builder: (context, isDisplayedHorizontalScroll, _) {
                                   return ValueListenableBuilder(
-                                      valueListenable: vm.columnWidthsNotifier,
-                                      builder: (context, columnWidths, _) {
-                                        if (!listEquals(vm.currentColumnWidths, columnWidths)) {
-                                          vm.setCurrentColumnWidths(columnWidths);
-                                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                                            vm.setIsDisplayedHorizontalScroll();
-                                            vm.setSizes();
-                                          });
-                                        }
-                                        final addedHeightBySubWidget =
-                                            widget.selectedRow != null && widget.selectedRowSubWidgetBuilder != null
-                                                ? 70
-                                                : 0;
-                                        double heightContentTable = (heightRow != null
-                                                ? min(maxHeight ?? 9999999, heightRow * widget.data.length)
-                                                : (maxHeight ?? widget.maxHeight ?? 300)) +
-                                            addedHeightBySubWidget;
-                                        if (heightContentTable < (maxHeight ?? widget.maxHeight ?? 300) &&
-                                            isDisplayedHorizontalScroll) {
-                                          final addedHeight = min(
-                                              (maxHeight ?? widget.maxHeight ?? 300) - heightContentTable,
-                                              widget.decorationConfiguration.bottomPaddingForScrollbar);
-                                          heightContentTable += addedHeight;
-                                        }
-                                        return Column(
-                                          children: [
-                                            SpargoTableHeaderWidget(
-                                              decorationConfig: widget.decorationConfiguration,
-                                              maxHeight: vm.heightHeader,
-                                              key: vm.headerKey,
-                                              columns: widget.configuration.columns,
-                                              columnWidths: columnWidths,
-                                              onStartResizeColumn: vm.onStartResizeColumn,
-                                              onMoveResizeColumn: vm.onMoveResizeColumn,
-                                              onEndResizeColumn: vm.onEndResizeColumn,
-                                            ),
-                                            SizedBox(
-                                              height: heightContentTable,
-                                              width: vm.tableWidth,
-                                              child: ValueListenableBuilder(
-                                                  valueListenable: vm.filteredDataNotifier,
-                                                  builder: (context, filteredData, _) {
-                                                    return ValueListenableBuilder(
-                                                        valueListenable: vm.sortedDataNotifier,
-                                                        builder: (context, sortedData, _) {
-                                                          final dataForRender =
-                                                              sortedData ?? filteredData ?? widget.data;
-                                                          return _ContentWidget<T>(
-                                                            heightRow: heightRow,
-                                                            dataForRender: dataForRender,
-                                                            verticalScrollController: vm.verticalScrollController,
-                                                            columnWidths: columnWidths,
-                                                            decorationConfiguration: widget.decorationConfiguration,
-                                                            thumbVisibility: widget.thumbVisibility,
-                                                            selectedRow: widget.selectedRow,
-                                                            selectedRowIndex: vm.selectedRowIndex,
-                                                            onRowTap: widget.onRowTap,
-                                                            getIsRowMarked: widget.getIsRowMarked,
-                                                            configuration: widget.configuration,
-                                                            selectedRowSubWidgetBuilder:
-                                                                widget.selectedRowSubWidgetBuilder,
-                                                            buildSizeCallback: vm.buildSizeCallback,
-                                                            isDisplayedHorizontalScroll: isDisplayedHorizontalScroll,
-                                                            child: widget.child,
-                                                          );
-                                                        });
-                                                  }),
-                                            ),
-                                          ],
-                                        );
+                                      valueListenable: vm.heightSubWidgetNotifier,
+                                      builder: (context, addedHeightBySubWidget, _) {
+                                        return ValueListenableBuilder(
+                                            valueListenable: vm.columnWidthsNotifier,
+                                            builder: (context, columnWidths, _) {
+                                              if (!listEquals(vm.currentColumnWidths, columnWidths)) {
+                                                vm.setCurrentColumnWidths(columnWidths);
+                                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                  vm.setIsDisplayedHorizontalScroll();
+                                                  vm.calculateMaxHeightTable();
+                                                });
+                                              }
+                                              double heightContentTable = (heightRow != null
+                                                  ? min(widget.maxHeight ?? maxHeight ?? 9999999,
+                                                      heightRow * widget.data.length + (addedHeightBySubWidget ?? 0))
+                                                  : (maxHeight != null
+                                                      ? maxHeight + (addedHeightBySubWidget ?? 0)
+                                                      : widget.maxHeight ?? 300));
+                                              if (heightContentTable < (maxHeight ?? widget.maxHeight ?? 300) &&
+                                                  isDisplayedHorizontalScroll) {
+                                                final addedHeight = min(
+                                                    (maxHeight ?? widget.maxHeight ?? 300) - heightContentTable,
+                                                    widget.decorationConfiguration.bottomPaddingForScrollbar);
+                                                heightContentTable += addedHeight;
+                                              }
+                                              return Column(
+                                                children: [
+                                                  SpargoTableHeaderWidget(
+                                                    decorationConfig: widget.decorationConfiguration,
+                                                    maxHeight: vm.heightHeader,
+                                                    key: vm.headerKey,
+                                                    columns: widget.configuration.columns,
+                                                    columnWidths: columnWidths,
+                                                    onStartResizeColumn: vm.onStartResizeColumn,
+                                                    onMoveResizeColumn: vm.onMoveResizeColumn,
+                                                    onEndResizeColumn: vm.onEndResizeColumn,
+                                                  ),
+                                                  ConstrainedBox(
+                                                    constraints: BoxConstraints(
+                                                        maxHeight: heightContentTable, maxWidth: vm.tableWidth),
+                                                    child: ValueListenableBuilder(
+                                                        valueListenable: vm.filteredDataNotifier,
+                                                        builder: (context, filteredData, _) {
+                                                          return ValueListenableBuilder(
+                                                              valueListenable: vm.sortedDataNotifier,
+                                                              builder: (context, sortedData, _) {
+                                                                final dataForRender =
+                                                                    sortedData ?? filteredData ?? widget.data;
+                                                                return _ContentWidget<T>(
+                                                                  heightRow: heightRow,
+                                                                  dataForRender: dataForRender,
+                                                                  verticalScrollController: vm.verticalScrollController,
+                                                                  columnWidths: columnWidths,
+                                                                  decorationConfiguration:
+                                                                      widget.decorationConfiguration,
+                                                                  thumbVisibility: widget.thumbVisibility,
+                                                                  selectedRow: widget.selectedRow,
+                                                                  selectedRowIndex: vm.selectedRowIndex,
+                                                                  onRowTap: widget.onRowTap,
+                                                                  getIsRowMarked: widget.getIsRowMarked,
+                                                                  configuration: widget.configuration,
+                                                                  selectedRowSubWidgetBuilder:
+                                                                      widget.selectedRowSubWidgetBuilder,
+                                                                  buildSizeCallback: vm.buildSizeCallback,
+                                                                  isDisplayedHorizontalScroll:
+                                                                      isDisplayedHorizontalScroll,
+                                                                  child: widget.child,
+                                                                );
+                                                              });
+                                                        }),
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       });
                                 });
                           }),
@@ -240,60 +244,100 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
     });
   }
 
+  Color? getColor(int adjustedIndex) {
+    return (widget.getIsRowMarked != null && widget.getIsRowMarked!(widget.dataForRender[adjustedIndex]))
+        ? widget.decorationConfiguration.rowIsMarkedColor
+        : widget.decorationConfiguration.colorRowsBetweenRows
+            ? (adjustedIndex % 2 == 0
+                ? widget.decorationConfiguration.colorOddItems
+                : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withAlpha(210))
+            : null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final itemsCount = widget.dataForRender.length +
-        (widget.selectedRowSubWidgetBuilder != null && widget.dataForRender.contains(widget.selectedRow) ? 1 : 0);
+    final itemsCount = widget.dataForRender.length;
     return Column(
       children: [
         if (widget.dataForRender.isNotEmpty)
+          Offstage(
+            child: SpargoTableRowWidget(
+              key: _key,
+              isSelected: false,
+              onRowTap: null,
+              columns: widget.configuration.columns,
+              columnWidths: widget.columnWidths,
+              buildRow: () => widget.configuration.buildRow(widget.dataForRender[0]),
+              colorRow: null,
+              border: widget.decorationConfiguration.borderRow,
+            ),
+          ),
+        if (widget.dataForRender.isNotEmpty && widget.heightRow != null)
           Flexible(
             child: Scrollbar(
               controller: widget.verticalScrollController,
               thumbVisibility: widget.thumbVisibility,
-              // thickness: 100,
               child: Padding(
                 padding: EdgeInsets.only(
                     bottom: widget.isDisplayedHorizontalScroll
                         ? widget.decorationConfiguration.bottomPaddingForScrollbar
                         : 0),
                 child: SelectionArea(
-                  child: ListView.builder(
+                  child: CustomScrollView(
                     physics: const ClampingScrollPhysics(),
                     controller: widget.verticalScrollController,
-                    itemExtent: widget.heightRow,
-                    itemBuilder: (context, index) {
-                      final colorRow =
-                          (widget.getIsRowMarked != null && widget.getIsRowMarked!(widget.dataForRender[index]))
-                              ? widget.decorationConfiguration.rowIsMarkedColor
-                              : widget.decorationConfiguration.colorRowsBetweenRows
-                                  ? (index % 2 == 0
-                                      ? widget.decorationConfiguration.colorOddItems
-                                      : widget.decorationConfiguration.colorEvenItems ?? Colors.grey.withAlpha(210))
-                                  : null;
-                      int resultIndex = index;
-                      if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRowIndex == index - 1) {
-                        return widget.selectedRowSubWidgetBuilder!(widget.dataForRender[index - 1]);
-                      }
-                      if (widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null
-                          ? index > widget.selectedRowIndex!
-                          : false) {
-                        resultIndex--;
-                      }
+                    slivers: [
+                      SliverFixedExtentList(
+                        itemExtent: widget.heightRow!,
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final colorRow = getColor(index);
 
-                      return SpargoTableRowWidget(
-                        key: index == 0 ? _key : null,
-                        isSelected: widget.selectedRow == widget.dataForRender[resultIndex],
-                        onRowTap:
-                            widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[resultIndex]) : null,
-                        columns: widget.configuration.columns,
-                        columnWidths: widget.columnWidths,
-                        buildRow: () => widget.configuration.buildRow(widget.dataForRender[resultIndex]),
-                        colorRow: colorRow,
-                        border: widget.decorationConfiguration.borderRow,
-                      );
-                    },
-                    itemCount: itemsCount,
+                            return SpargoTableRowWidget(
+                              key: Key('row_$index'),
+                              isSelected: widget.selectedRow == widget.dataForRender[index],
+                              onRowTap:
+                                  widget.onRowTap != null ? () => widget.onRowTap!(widget.dataForRender[index]) : null,
+                              columns: widget.configuration.columns,
+                              columnWidths: widget.columnWidths,
+                              buildRow: () => widget.configuration.buildRow(widget.dataForRender[index]),
+                              colorRow: colorRow,
+                              border: widget.decorationConfiguration.borderRow,
+                            );
+                          },
+                          childCount: widget.selectedRowIndex != null ? widget.selectedRowIndex! + 1 : itemsCount,
+                        ),
+                      ),
+                      if (widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null) ...[
+                        SliverToBoxAdapter(
+                          child: widget.selectedRowSubWidgetBuilder!(widget.dataForRender[widget.selectedRowIndex!]),
+                        ),
+                        if (widget.selectedRowIndex != itemsCount - 1)
+                          SliverFixedExtentList(
+                            itemExtent: widget.heightRow!,
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final adjustedIndex = index + (widget.selectedRowIndex! + 1);
+                                final colorRow = getColor(adjustedIndex);
+
+                                return SpargoTableRowWidget(
+                                  key: Key('row_$adjustedIndex'),
+                                  isSelected: widget.selectedRow == widget.dataForRender[adjustedIndex],
+                                  onRowTap: widget.onRowTap != null
+                                      ? () => widget.onRowTap!(widget.dataForRender[adjustedIndex])
+                                      : null,
+                                  columns: widget.configuration.columns,
+                                  columnWidths: widget.columnWidths,
+                                  buildRow: () => widget.configuration.buildRow(widget.dataForRender[adjustedIndex]),
+                                  colorRow: colorRow,
+                                  border: widget.decorationConfiguration.borderRow,
+                                );
+                              },
+                              childCount: itemsCount - (widget.selectedRowIndex! + 1),
+                            ),
+                          ),
+                      ],
+                    ],
                   ),
                 ),
               ),

@@ -16,6 +16,7 @@ class SpargoTableViewModel<T> {
   }) : _widgetState = widgetState;
 
   final State _widgetState;
+  BuildContext get _context => _widgetState.context;
   bool get mounted => _widgetState.mounted;
 
   final SpargoTableConfig<T> configuration;
@@ -31,6 +32,7 @@ class SpargoTableViewModel<T> {
   final ValueNotifier<SpargoSortModel?> sortColumnNotifier = ValueNotifier(null);
 
   final ValueNotifier<double?> heightRowNotifier = ValueNotifier(null);
+  final ValueNotifier<double?> heightSubWidgetNotifier = ValueNotifier(null);
 
   final verticalScrollController = ScrollController();
   final horizontalScrollController = ScrollController();
@@ -58,6 +60,7 @@ class SpargoTableViewModel<T> {
     filteredDataNotifier.dispose();
     sortColumnNotifier.dispose();
     heightRowNotifier.dispose();
+    heightSubWidgetNotifier.dispose();
     sortedDataNotifier.dispose();
     verticalScrollController.dispose();
     horizontalScrollController.dispose();
@@ -66,7 +69,7 @@ class SpargoTableViewModel<T> {
     isDisplayedHorizontalScrollNotifier.dispose();
   }
 
-  void init() {
+  void init(SpargoTable<T> widget) {
     final columnWidths = <double>[];
     for (int i = 0; i < configuration.columns.length; i++) {
       columnWidths.add(configuration.columns[i].width);
@@ -76,9 +79,26 @@ class SpargoTableViewModel<T> {
     }
     columnWidthsNotifier.value = columnWidths;
     _calculateSelectedRowIndex();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setIsDisplayedHorizontalScroll();
+      if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRow != null) {
+        _calculateSelectedRowSubWidgetHeight(widget.selectedRowSubWidgetBuilder!, widget.selectedRow as T);
+      }
     });
+  }
+
+  void didUpdateWidget(SpargoTable<T> widget, SpargoTable<T> oldWidget) {
+    this.data = widget.data;
+    selectedRow = widget.selectedRow;
+    if (widget.selectedRow != oldWidget.selectedRow) {
+      _calculateSelectedRowIndex();
+      if (widget.selectedRowSubWidgetBuilder != null && widget.selectedRow != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _calculateSelectedRowSubWidgetHeight(widget.selectedRowSubWidgetBuilder!, widget.selectedRow as T);
+        });
+      }
+    }
   }
 
   void setIsDisplayedHorizontalScroll() {
@@ -177,14 +197,6 @@ class SpargoTableViewModel<T> {
     setIsDisplayedHorizontalScroll();
   }
 
-  void didUpdateWidget(SpargoTable<T> widget, SpargoTable<T> oldWidget) {
-    this.data = widget.data;
-    selectedRow = widget.selectedRow;
-    if (widget.selectedRow != oldWidget.selectedRow) {
-      _calculateSelectedRowIndex();
-    }
-  }
-
   void _calculateSelectedRowIndex() {
     final resultData = sortedDataNotifier.value ?? filteredDataNotifier.value ?? data;
     for (int i = 0; i < resultData.length; i++) {
@@ -197,11 +209,36 @@ class SpargoTableViewModel<T> {
     selectedRowIndex = null;
   }
 
+  void _calculateSelectedRowSubWidgetHeight(SubRowWidget<T> selectedRowSubWidgetBuilder, T model) {
+    final key = GlobalKey();
+    final context = _context;
+    final overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          top: 4000,
+          left: 4000,
+          child: Material(child: SizedBox(key: key, child: selectedRowSubWidgetBuilder(model))),
+        );
+      },
+    );
+
+    // Добавляем OverlayEntry в Overlay
+    Overlay.of(context).insert(overlayEntry);
+
+    // Измеряем размеры виджета
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final RenderBox renderBox = key.currentContext?.findRenderObject() as RenderBox;
+      final height = renderBox.size.height;
+      heightSubWidgetNotifier.value = height;
+      overlayEntry.remove();
+    });
+  }
+
   void buildSizeCallback(Size sizeRow) {
     heightRowNotifier.value ??= sizeRow.height;
   }
 
-  void setSizes() {
+  void calculateMaxHeightTable() {
     final renderBox = tableKey.currentContext?.findRenderObject() as RenderBox?;
     final renderBoxHeader = headerKey.currentContext?.findRenderObject() as RenderBox?;
     _heightHeader = renderBoxHeader?.size.height;
