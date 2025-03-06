@@ -118,8 +118,10 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                                   vm.calculateMaxHeightTable();
                                                 });
                                               }
-                                              final heightSubWidget =
-                                                  widget.maxHeightSubWidget ?? addedHeightBySubWidget ?? 0;
+                                              final heightSubWidget = widget.selectedRow != null &&
+                                                      widget.selectedRowSubWidgetBuilder != null
+                                                  ? widget.maxHeightSubWidget ?? addedHeightBySubWidget ?? 0
+                                                  : 0;
                                               double heightContentTable = (heightRow != null
                                                   ? min(widget.maxHeight ?? maxHeight ?? 9999999,
                                                       heightRow * widget.data.length + heightSubWidget)

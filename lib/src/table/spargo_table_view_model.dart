@@ -97,6 +97,8 @@ class SpargoTableViewModel<T> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           _calculateSelectedRowSubWidgetHeight(widget.selectedRowSubWidgetBuilder!, widget.selectedRow as T);
         });
+      } else {
+        heightSubWidgetNotifier.value = 0;
       }
     }
   }

@@ -1,3 +1,6 @@
+## 0.0.11
+* Fix property maxHeightSubWidget 
+
 ## 0.0.10
 * Added new property maxHeightSubWidget 
 

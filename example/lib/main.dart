@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SpargoTable<DemoModel>(
                 maxHeight: 472,
                 data: data2,
-                onRowTap: (model) => setState(() => selectedRow2 = model),
+                onRowTap: (model) => setState(() => selectedRow2 == model ? selectedRow2 = null : selectedRow2 = model),
                 selectedRow: selectedRow2,
                 maxHeightSubWidget: 150,
                 selectedRowSubWidgetBuilder: (model) => SpargoTable<DemoModel>(
