@@ -1,3 +1,6 @@
+## 0.0.12
+* Added new property selectedRowColor
+
 ## 0.0.11
 * Fix property maxHeightSubWidget 
 
