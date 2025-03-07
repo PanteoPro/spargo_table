@@ -276,6 +276,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
               buildRow: () => widget.configuration.buildRow(widget.dataForRender[0]),
               colorRow: null,
               border: widget.decorationConfiguration.borderRow,
+              selectedRowColor: widget.decorationConfiguration.selectedRowColor,
             ),
           ),
         if (widget.dataForRender.isNotEmpty && widget.heightRow != null)
@@ -309,6 +310,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                               buildRow: () => widget.configuration.buildRow(widget.dataForRender[index]),
                               colorRow: colorRow,
                               border: widget.decorationConfiguration.borderRow,
+                              selectedRowColor: widget.decorationConfiguration.selectedRowColor,
                             );
                           },
                           childCount: widget.selectedRowIndex != null ? widget.selectedRowIndex! + 1 : itemsCount,
@@ -337,6 +339,7 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                                   buildRow: () => widget.configuration.buildRow(widget.dataForRender[adjustedIndex]),
                                   colorRow: colorRow,
                                   border: widget.decorationConfiguration.borderRow,
+                                  selectedRowColor: widget.decorationConfiguration.selectedRowColor,
                                 );
                               },
                               childCount: itemsCount - (widget.selectedRowIndex! + 1),
