@@ -31,7 +31,7 @@ class SpargoTableDecorationConfig {
   /// Цвет чет строки
   final Color? colorEvenItems;
 
-  /// Цвет текущей выьранной строки
+  /// Цвет текущей выбранной строки
   final Color? selectedRowColor;
 
   /// Цвет, в который будет окрашена строка таблицы,если для нее будет определено и выполнено (true) условие isMarked внутри _ContentWidget
