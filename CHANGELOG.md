@@ -1,4 +1,10 @@
 ## 0.0.12
+### Breaking Changes
+* Remove ```child``` parameter in SpargoTableCellConfig
+* Add ```builder: (bool isSelected)``` parameter in SpargoTableCellConfig
+* Fix Bug with selectedRow
+
+## 0.0.12
 * Added new property selectedRowColor
 
 ## 0.0.11

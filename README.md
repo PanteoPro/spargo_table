@@ -15,7 +15,7 @@ Add the library to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  spargo_table: ^0.0.12
+  spargo_table: ^0.0.13
 ```
 
 Then run:
@@ -40,8 +40,8 @@ SpargoTable<MyModel>(
   ),
   configuration: SpargoTableConfig(
     buildRow: (model) => [
-      SpargoTableCellConfig(child: Text(model.name)),
-      SpargoTableCellConfig(child: Text(model.value.toString())),
+      SpargoTableCellConfig(builder: (bool isSelected) => Text(model.name)),
+      SpargoTableCellConfig(builder: (bool isSelected) => Text(model.value.toString())),
     ],
     columns: [
       SpargoTableColumnConfig(name: "Name", width: 100),

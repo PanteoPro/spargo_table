@@ -1,6 +1,6 @@
 name: spargo_table
 description: "A highly customizable and flexible table widget for Flutter applications. Easily display and manage tabular data with sorting, filtering, and custom styling."
-version: 0.0.12
+version: 0.0.13
 homepage: https://github.com/PanteoPro/spargo_table
 
 environment:

@@ -38,7 +38,7 @@ class SpargoTableRowWidget extends StatelessWidget {
             spacing: 17,
             children: [
               for (int i = 0; i < cells.length; i++)
-                SpargoTableCellWidget(width: columnWidths[i], child: cells[i].child)
+                SpargoTableCellWidget(width: columnWidths[i], child: cells[i].builder(isSelected))
             ],
           ),
         ),

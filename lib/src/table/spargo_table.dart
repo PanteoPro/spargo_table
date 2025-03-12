@@ -313,7 +313,9 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                               selectedRowColor: widget.decorationConfiguration.selectedRowColor,
                             );
                           },
-                          childCount: widget.selectedRowIndex != null ? widget.selectedRowIndex! + 1 : itemsCount,
+                          childCount: widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null
+                              ? widget.selectedRowIndex! + 1
+                              : itemsCount,
                         ),
                       ),
                       if (widget.selectedRowIndex != null && widget.selectedRowSubWidgetBuilder != null) ...[
