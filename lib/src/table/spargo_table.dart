@@ -87,55 +87,55 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
           return ValueListenableBuilder(
               valueListenable: vm.heightRowNotifier,
               builder: (context, heightRow, _) {
-                return Container(
-                  decoration: BoxDecoration(
-                      border: widget.decorationConfiguration.borderTable,
-                      borderRadius: widget.decorationConfiguration.tableBorderRadius),
-                  child: Scrollbar(
-                    controller: vm.horizontalScrollController,
-                    thumbVisibility: widget.thumbVisibility,
-                    thickness: widget.decorationConfiguration.scrollbarBottomHeight,
-                    child: SingleChildScrollView(
-                      key: vm.tableKey,
-                      controller: vm.horizontalScrollController,
-                      scrollDirection: Axis.horizontal,
-                      child: ValueListenableBuilder(
-                          valueListenable: vm.maxHeightNotifier,
-                          builder: (context, maxHeight, _) {
+                return ValueListenableBuilder(
+                    valueListenable: vm.maxHeightNotifier,
+                    builder: (context, maxHeight, _) {
+                      return ValueListenableBuilder(
+                          valueListenable: vm.isDisplayedHorizontalScrollNotifier,
+                          builder: (context, isDisplayedHorizontalScroll, _) {
                             return ValueListenableBuilder(
-                                valueListenable: vm.isDisplayedHorizontalScrollNotifier,
-                                builder: (context, isDisplayedHorizontalScroll, _) {
+                                valueListenable: vm.heightSubWidgetNotifier,
+                                builder: (context, addedHeightBySubWidget, _) {
                                   return ValueListenableBuilder(
-                                      valueListenable: vm.heightSubWidgetNotifier,
-                                      builder: (context, addedHeightBySubWidget, _) {
-                                        return ValueListenableBuilder(
-                                            valueListenable: vm.columnWidthsNotifier,
-                                            builder: (context, columnWidths, _) {
-                                              if (!listEquals(vm.currentColumnWidths, columnWidths)) {
-                                                vm.setCurrentColumnWidths(columnWidths);
-                                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                  vm.setIsDisplayedHorizontalScroll();
-                                                  vm.calculateMaxHeightTable();
-                                                });
-                                              }
-                                              final heightSubWidget = widget.selectedRow != null &&
-                                                      widget.selectedRowSubWidgetBuilder != null
-                                                  ? widget.maxHeightSubWidget ?? addedHeightBySubWidget ?? 0
-                                                  : 0;
-                                              double heightContentTable = (heightRow != null
-                                                  ? min(widget.maxHeight ?? maxHeight ?? 9999999,
-                                                      heightRow * widget.data.length + heightSubWidget)
-                                                  : (maxHeight != null
-                                                      ? maxHeight + heightSubWidget
-                                                      : widget.maxHeight ?? 300));
-                                              if (heightContentTable < (maxHeight ?? widget.maxHeight ?? 300) &&
-                                                  isDisplayedHorizontalScroll) {
-                                                final addedHeight = min(
-                                                    (maxHeight ?? widget.maxHeight ?? 300) - heightContentTable,
-                                                    widget.decorationConfiguration.bottomPaddingForScrollbar);
-                                                heightContentTable += addedHeight;
-                                              }
-                                              return Column(
+                                      valueListenable: vm.columnWidthsNotifier,
+                                      builder: (context, columnWidths, _) {
+                                        if (!listEquals(vm.currentColumnWidths, columnWidths)) {
+                                          vm.setCurrentColumnWidths(columnWidths);
+                                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                                            vm.setIsDisplayedHorizontalScroll();
+                                            vm.calculateMaxHeightTable();
+                                          });
+                                        }
+                                        final heightSubWidget =
+                                            widget.selectedRow != null && widget.selectedRowSubWidgetBuilder != null
+                                                ? widget.maxHeightSubWidget ?? addedHeightBySubWidget ?? 0
+                                                : 0;
+                                        double heightContentTable = (heightRow != null
+                                            ? min(widget.maxHeight ?? maxHeight ?? 9999999,
+                                                heightRow * widget.data.length + heightSubWidget)
+                                            : (maxHeight != null
+                                                ? maxHeight + heightSubWidget
+                                                : widget.maxHeight ?? 300));
+                                        if (heightContentTable < (maxHeight ?? widget.maxHeight ?? 300) &&
+                                            isDisplayedHorizontalScroll) {
+                                          final addedHeight = min(
+                                              (maxHeight ?? widget.maxHeight ?? 300) - heightContentTable,
+                                              widget.decorationConfiguration.bottomPaddingForScrollbar);
+                                          heightContentTable += addedHeight;
+                                        }
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                              border: widget.decorationConfiguration.borderTable,
+                                              borderRadius: widget.decorationConfiguration.tableBorderRadius),
+                                          child: Scrollbar(
+                                            controller: vm.horizontalScrollController,
+                                            thumbVisibility: widget.thumbVisibility,
+                                            thickness: widget.decorationConfiguration.scrollbarBottomHeight,
+                                            child: SingleChildScrollView(
+                                              key: vm.tableKey,
+                                              controller: vm.horizontalScrollController,
+                                              scrollDirection: Axis.horizontal,
+                                              child: Column(
                                                 children: [
                                                   SpargoTableHeaderWidget(
                                                     decorationConfig: widget.decorationConfiguration,
@@ -182,14 +182,14 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
                                                         }),
                                                   ),
                                                 ],
-                                              );
-                                            });
+                                              ),
+                                            ),
+                                          ),
+                                        );
                                       });
                                 });
-                          }),
-                    ),
-                  ),
-                );
+                          });
+                    });
               });
         },
       ),
