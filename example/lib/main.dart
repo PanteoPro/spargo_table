@@ -119,52 +119,52 @@ class _MyHomePageState extends State<MyHomePage> {
                 data: data2,
                 onRowTap: (model) => setState(() => selectedRow2 == model ? selectedRow2 = null : selectedRow2 = model),
                 selectedRow: selectedRow2,
-                maxHeightSubWidget: 150,
-                selectedRowSubWidgetBuilder: (model) => SpargoTable<DemoModel>(
-                  maxHeight: 472,
-                  decorationConfiguration: SpargoTableDecorationConfig(
-                      colorRowsBetweenRows: true, colorEvenItems: Colors.red, colorOddItems: Colors.green),
-                  selectedRowSubWidgetBuilder: (model) => Container(
-                    color: Colors.red,
-                    child: Column(
-                      children: [
-                        Text('test'),
-                        Text('test'),
-                        Text('test'),
-                      ],
-                    ),
-                  ),
-                  // selectedRow: data1[27],
-                  data: data1,
-                  configuration: SpargoTableConfig(
-                    columns: [
-                      SpargoTableColumnConfig(name: 'Id'),
-                      SpargoTableColumnConfig(name: 'Name'),
-                      SpargoTableColumnConfig(name: 'Value1'),
-                      SpargoTableColumnConfig(name: 'Value2'),
-                      SpargoTableColumnConfig(name: 'Value3'),
-                      SpargoTableColumnConfig(name: 'Value4'),
-                      SpargoTableColumnConfig(name: 'Value5'),
-                      SpargoTableColumnConfig(name: 'Value6'),
-                    ],
-                    buildRow: (model) => [
-                      SpargoTableCellConfig(
-                          child: Column(
-                        children: [
-                          Text(model.id.toString()),
-                          Text(model.id.toString()),
-                        ],
-                      )),
-                      SpargoTableCellConfig(child: Text(model.name.toString())),
-                      SpargoTableCellConfig(child: Text(model.value1.toString())),
-                      SpargoTableCellConfig(child: Text(model.value2.toString())),
-                      SpargoTableCellConfig(child: Text(model.value3.toString())),
-                      SpargoTableCellConfig(child: Text(model.value4.toString())),
-                      SpargoTableCellConfig(child: Text(model.value5.toString())),
-                      SpargoTableCellConfig(child: Text(model.value6.toString())),
-                    ],
-                  ),
-                ),
+                // maxHeightSubWidget: 150,
+                // selectedRowSubWidgetBuilder: (model) => SpargoTable<DemoModel>(
+                //   maxHeight: 472,
+                //   decorationConfiguration: SpargoTableDecorationConfig(
+                //       colorRowsBetweenRows: true, colorEvenItems: Colors.red, colorOddItems: Colors.green),
+                //   selectedRowSubWidgetBuilder: (model) => Container(
+                //     color: Colors.red,
+                //     child: Column(
+                //       children: [
+                //         Text('test'),
+                //         Text('test'),
+                //         Text('test'),
+                //       ],
+                //     ),
+                //   ),
+                //   // selectedRow: data1[27],
+                //   data: data1,
+                //   configuration: SpargoTableConfig(
+                //     columns: [
+                //       SpargoTableColumnConfig(name: 'Id'),
+                //       SpargoTableColumnConfig(name: 'Name'),
+                //       SpargoTableColumnConfig(name: 'Value1'),
+                //       SpargoTableColumnConfig(name: 'Value2'),
+                //       SpargoTableColumnConfig(name: 'Value3'),
+                //       SpargoTableColumnConfig(name: 'Value4'),
+                //       SpargoTableColumnConfig(name: 'Value5'),
+                //       SpargoTableColumnConfig(name: 'Value6'),
+                //     ],
+                //     buildRow: (model) => [
+                //       SpargoTableCellConfig(
+                //           child: Column(
+                //         children: [
+                //           Text(model.id.toString()),
+                //           Text(model.id.toString()),
+                //         ],
+                //       )),
+                //       SpargoTableCellConfig(child: Text(model.name.toString())),
+                //       SpargoTableCellConfig(child: Text(model.value1.toString())),
+                //       SpargoTableCellConfig(child: Text(model.value2.toString())),
+                //       SpargoTableCellConfig(child: Text(model.value3.toString())),
+                //       SpargoTableCellConfig(child: Text(model.value4.toString())),
+                //       SpargoTableCellConfig(child: Text(model.value5.toString())),
+                //       SpargoTableCellConfig(child: Text(model.value6.toString())),
+                //     ],
+                //   ),
+                // ),
                 configuration: SpargoTableConfig(
                   columns: [
                     SpargoTableColumnConfig(
@@ -180,14 +180,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     SpargoTableColumnConfig(name: 'Value6'),
                   ],
                   buildRow: (model) => [
-                    SpargoTableCellConfig(child: Text(model.id.toString())),
-                    SpargoTableCellConfig(child: Text(model.name.toString())),
-                    SpargoTableCellConfig(child: Text(model.value1.toString())),
-                    SpargoTableCellConfig(child: Text(model.value2.toString())),
-                    SpargoTableCellConfig(child: Text(model.value3.toString())),
-                    SpargoTableCellConfig(child: Text(model.value4.toString())),
-                    SpargoTableCellConfig(child: Text(model.value5.toString())),
-                    SpargoTableCellConfig(child: Text(model.value6.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(
+                              model.id.toString(),
+                              style: !isSelected
+                                  ? null
+                                  : Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
+                            )),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.name.toString())),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value1.toString())),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value2.toString())),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value3.toString())),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value4.toString())),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value5.toString())),
+                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value6.toString())),
                   ],
                 ),
               ),
