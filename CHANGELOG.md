@@ -1,4 +1,7 @@
-## 0.0.12
+## 0.0.14
+* Remove SelectionArea
+
+## 0.0.13
 ### Breaking Changes
 * Remove ```child``` parameter in SpargoTableCellConfig
 * Add ```builder: (bool isSelected)``` parameter in SpargoTableCellConfig
