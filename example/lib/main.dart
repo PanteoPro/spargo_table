@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               SelectionArea(child: Text('dfgko,adpsfldsaopfladsopfdls')),
               SpargoTable<DemoModel>(
-                maxHeight: 472,
+                // maxHeight: 472,
                 data: data2,
                 onRowTap: (model) => setState(() => selectedRow2 == model
                     ? selectedRow2 = null

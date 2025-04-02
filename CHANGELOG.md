@@ -1,3 +1,6 @@
+## 0.0.15
+* Fixed an issue where the table's maxHeight would incorrectly increase during resize. It now properly respects the defined maximum height limit.
+
 ## 0.0.14
 * Remove SelectionArea
 
