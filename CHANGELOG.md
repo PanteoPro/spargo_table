@@ -1,3 +1,6 @@
+## 0.0.17
+* Added Prevented default browser behavior on init table
+
 ## 0.0.16
 ### Added
 * Web: Prevented default browser behavior (scrolling/page drag) when resizing columns by calling preventDefault() on touch/mouse events.

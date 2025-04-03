@@ -63,7 +63,9 @@ class SpargoTableViewModel<T> {
     for (final notifiers in queryFilters.values) {
       notifiers.dispose();
     }
-    webUtils.cleanup();
+    if (kIsWeb) {
+      webUtils.cleanup();
+    }
     columnWidthsNotifier.dispose();
     filteredDataNotifier.dispose();
     sortColumnNotifier.dispose();
@@ -78,6 +80,10 @@ class SpargoTableViewModel<T> {
   }
 
   void init(SpargoTable<T> widget) {
+    if (kIsWeb) {
+      webUtils.preventBrowserDrag();
+    }
+
     final columnWidths = <double>[];
     for (int i = 0; i < configuration.columns.length; i++) {
       columnWidths.add(configuration.columns[i].width);
@@ -188,11 +194,6 @@ class SpargoTableViewModel<T> {
   Offset? _startTablePosition;
 
   void onStartResizeColumn(PointerDownEvent event, int index) {
-    // Предотвращаем стандартное поведение браузера
-    if (kIsWeb) {
-      webUtils.preventBrowserDrag();
-    }
-
     _resizeColumnIndex = index;
     _startColumnWidth = columnWidthsNotifier.value[index];
     _startMousePosition = event.localPosition;
@@ -201,10 +202,6 @@ class SpargoTableViewModel<T> {
   }
 
   void onEndResizeColumn(PointerUpEvent event, int index) {
-    if (kIsWeb) {
-      webUtils.cleanup();
-    }
-
     _resizeColumnIndex = null;
     _startColumnWidth = null;
     _startMousePosition = null;
