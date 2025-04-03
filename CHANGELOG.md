@@ -1,3 +1,9 @@
+## 0.0.16
+### Added
+* Web: Prevented default browser behavior (scrolling/page drag) when resizing columns by calling preventDefault() on touch/mouse events.
+### Fixed
+* Flutter Web: No longer conflicts with browser's native touch-scrolling while adjusting column widths.
+
 ## 0.0.15
 * Fixed an issue where the table's maxHeight would incorrectly increase during resize. It now properly respects the defined maximum height limit.
 

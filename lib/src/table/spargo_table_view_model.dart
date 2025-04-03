@@ -1,8 +1,10 @@
 import 'dart:math';
+import 'package:spargo_table/src/table/web_utils/i_web_utils.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:spargo_table/spargo_table.dart';
 import 'package:spargo_table/src/table/config/spargo_table_config.dart';
+import 'package:spargo_table/src/table/config/spargo_table_decoration_config.dart';
 import 'package:spargo_table/src/table/models/spargo_sort_model.dart';
 import 'package:spargo_table/src/table/spargo_table.dart';
 
@@ -12,12 +14,15 @@ class SpargoTableViewModel<T> {
     required this.configuration,
     required this.decorationConfiguration,
     required this.selectedRow,
+    required this.webUtils,
     required State widgetState,
   }) : _widgetState = widgetState;
 
   final State _widgetState;
   BuildContext get _context => _widgetState.context;
   bool get mounted => _widgetState.mounted;
+
+  final IWebUtils webUtils;
 
   final SpargoTableConfig<T> configuration;
   final SpargoTableDecorationConfig decorationConfiguration;
@@ -58,6 +63,7 @@ class SpargoTableViewModel<T> {
     for (final notifiers in queryFilters.values) {
       notifiers.dispose();
     }
+    webUtils.cleanup();
     columnWidthsNotifier.dispose();
     filteredDataNotifier.dispose();
     sortColumnNotifier.dispose();
@@ -182,6 +188,11 @@ class SpargoTableViewModel<T> {
   Offset? _startTablePosition;
 
   void onStartResizeColumn(PointerDownEvent event, int index) {
+    // Предотвращаем стандартное поведение браузера
+    if (kIsWeb) {
+      webUtils.preventBrowserDrag();
+    }
+
     _resizeColumnIndex = index;
     _startColumnWidth = columnWidthsNotifier.value[index];
     _startMousePosition = event.localPosition;
@@ -190,6 +201,10 @@ class SpargoTableViewModel<T> {
   }
 
   void onEndResizeColumn(PointerUpEvent event, int index) {
+    if (kIsWeb) {
+      webUtils.cleanup();
+    }
+
     _resizeColumnIndex = null;
     _startColumnWidth = null;
     _startMousePosition = null;

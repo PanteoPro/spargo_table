@@ -29,7 +29,9 @@ class SpargoTableRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final cells = buildRow();
     return Material(
-      color: isSelected ? selectedRowColor ?? Theme.of(context).colorScheme.primary : colorRow ?? Colors.white,
+      color: isSelected
+          ? selectedRowColor ?? Theme.of(context).colorScheme.primary
+          : colorRow ?? Colors.white,
       child: InkWell(
         onTap: onRowTap,
         child: DecoratedBox(
@@ -38,7 +40,8 @@ class SpargoTableRowWidget extends StatelessWidget {
             spacing: 17,
             children: [
               for (int i = 0; i < cells.length; i++)
-                SpargoTableCellWidget(width: columnWidths[i], child: cells[i].builder(isSelected))
+                SpargoTableCellWidget(
+                    width: columnWidths[i], child: cells[i].builder(isSelected))
             ],
           ),
         ),

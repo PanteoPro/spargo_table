@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:spargo_table/src/table/spargo_table_view_model_provider.dart';
 import 'package:spargo_table/src/table/config/spargo_table_config.dart';
 import 'package:spargo_table/src/table/config/spargo_table_decoration_config.dart';
 import 'package:spargo_table/src/table/spargo_table_view_model.dart';
-import 'package:spargo_table/src/table/spargo_table_view_model_provider.dart';
 import 'package:spargo_table/src/table/widgets/spargo_table_header_widget.dart';
 import 'package:spargo_table/src/table/widgets/spargo_table_row_widget.dart';
+
+import 'package:spargo_table/src/table/web_utils/i_web_utils.dart'
+    if (dart.library.js) 'package:spargo_table/src/table/web_utils/web_utils.dart';
 
 typedef SubRowWidget<T> = Widget Function(T model);
 
@@ -51,6 +54,7 @@ class _SpargoTableState<T> extends State<SpargoTable<T>> {
     selectedRow: widget.selectedRow,
     configuration: widget.configuration,
     decorationConfiguration: widget.decorationConfiguration,
+    webUtils: WebUtils(),
   );
 
   @override
