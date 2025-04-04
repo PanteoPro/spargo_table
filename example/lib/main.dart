@@ -130,52 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ? selectedRow2 = null
                       : selectedRow2 = model),
                   selectedRow: selectedRow2,
-                  // maxHeightSubWidget: 150,
-                  // selectedRowSubWidgetBuilder: (model) => SpargoTable<DemoModel>(
-                  //   maxHeight: 472,
-                  //   decorationConfiguration: SpargoTableDecorationConfig(
-                  //       colorRowsBetweenRows: true, colorEvenItems: Colors.red, colorOddItems: Colors.green),
-                  //   selectedRowSubWidgetBuilder: (model) => Container(
-                  //     color: Colors.red,
-                  //     child: Column(
-                  //       children: [
-                  //         Text('test'),
-                  //         Text('test'),
-                  //         Text('test'),
-                  //       ],
-                  //     ),
-                  //   ),
-                  //   // selectedRow: data1[27],
-                  //   data: data1,
-                  //   configuration: SpargoTableConfig(
-                  //     columns: [
-                  //       SpargoTableColumnConfig(name: 'Id'),
-                  //       SpargoTableColumnConfig(name: 'Name'),
-                  //       SpargoTableColumnConfig(name: 'Value1'),
-                  //       SpargoTableColumnConfig(name: 'Value2'),
-                  //       SpargoTableColumnConfig(name: 'Value3'),
-                  //       SpargoTableColumnConfig(name: 'Value4'),
-                  //       SpargoTableColumnConfig(name: 'Value5'),
-                  //       SpargoTableColumnConfig(name: 'Value6'),
-                  //     ],
-                  //     buildRow: (model) => [
-                  //       SpargoTableCellConfig(
-                  //           child: Column(
-                  //         children: [
-                  //           Text(model.id.toString()),
-                  //           Text(model.id.toString()),
-                  //         ],
-                  //       )),
-                  //       SpargoTableCellConfig(child: Text(model.name.toString())),
-                  //       SpargoTableCellConfig(child: Text(model.value1.toString())),
-                  //       SpargoTableCellConfig(child: Text(model.value2.toString())),
-                  //       SpargoTableCellConfig(child: Text(model.value3.toString())),
-                  //       SpargoTableCellConfig(child: Text(model.value4.toString())),
-                  //       SpargoTableCellConfig(child: Text(model.value5.toString())),
-                  //       SpargoTableCellConfig(child: Text(model.value6.toString())),
-                  //     ],
-                  //   ),
-                  // ),
+
                   decorationConfiguration: SpargoTableDecorationConfig(
                     colorRowsBetweenRows: true,
                     colorEvenItems: const Color(0xFFDDE8FF),
@@ -197,6 +152,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         topRight: Radius.circular(12)),
                   ),
                   configuration: SpargoTableConfig(
+                    emptyFilterBuilder: (context) {
+                      print('Buid');
+                      return Center(child: Text('empty'));
+                    },
                     columns: [
                       SpargoTableColumnConfig(
                         name: 'Id',

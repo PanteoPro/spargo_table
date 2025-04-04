@@ -448,6 +448,8 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
               ),
             ),
           ),
+        if (widget.configuration.emptyFilterBuilder != null && itemsCount == 0)
+          widget.configuration.emptyFilterBuilder!(context),
         if (widget.child != null) widget.child!,
       ],
     );

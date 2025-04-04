@@ -1,3 +1,6 @@
+## 0.0.18
+* Added new builder emptyFilterBuilder
+
 ## 0.0.17
 * Added Prevented default browser behavior on init table
 
