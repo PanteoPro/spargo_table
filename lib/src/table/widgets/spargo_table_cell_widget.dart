@@ -26,15 +26,7 @@ class SpargoTableCellWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Flexible(
-                  child: DefaultTextStyle(
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              fontSize: 40,
-                              overflow: TextOverflow.ellipsis,
-                            ) ??
-                        const TextStyle(overflow: TextOverflow.ellipsis),
-                    maxLines: 1,
-                    child: child,
-                  ),
+                  child: _buildEllipsisChild(child),
                 ),
               ],
             ),
@@ -43,4 +35,25 @@ class SpargoTableCellWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildEllipsisChild(Widget child) {
+  if (child is Text) {
+    return Text(
+      child.data ?? '',
+      style: child.style,
+      textAlign: child.textAlign,
+      textDirection: child.textDirection,
+      locale: child.locale,
+      softWrap: false,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      textScaler: child.textScaler,
+      semanticsLabel: child.semanticsLabel,
+      strutStyle: child.strutStyle,
+      textWidthBasis: TextWidthBasis.parent,
+      textHeightBehavior: child.textHeightBehavior,
+    );
+  }
+  return child;
 }
