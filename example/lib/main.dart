@@ -8,7 +8,8 @@ void main() {
 }
 
 class DemoModel {
-  const DemoModel(this.id, this.name, this.value1, this.value2, this.value3, this.value4, this.value5, this.value6);
+  const DemoModel(this.id, this.name, this.value1, this.value2, this.value3,
+      this.value4, this.value5, this.value6);
   final int id;
   final String name;
   final String value1;
@@ -76,11 +77,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   DemoModel? selectedRow2;
+  bool isShow = false;
 
   @override
   Widget build(BuildContext context) {
     final data1 = List.generate(
-      2,
+      5,
       (index) => DemoModel(
         index,
         'name_$index',
@@ -93,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
     final data2 = List.generate(
-      3,
+      5,
       (index) => DemoModel(
         index,
         'name_$index',
@@ -109,15 +111,113 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        setState(() {
+          isShow = !isShow;
+        });
+      }),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              SelectionArea(child: Text('dfgko,adpsfldsaopfladsopfdls')),
+              if (isShow)
+                SpargoTable<DemoModel>(
+                  // maxHeight: 472,
+                  data: data2,
+                  onRowTap: (model) => setState(() => selectedRow2 == model
+                      ? selectedRow2 = null
+                      : selectedRow2 = model),
+                  selectedRow: selectedRow2,
+
+                  decorationConfiguration: SpargoTableDecorationConfig(
+                    colorRowsBetweenRows: true,
+                    colorEvenItems: const Color(0xFFDDE8FF),
+                    headerBackground: Colors.blue,
+                    borderTable: Border.all(width: 1, color: Colors.blue),
+                    iconHeaderColor: Colors.white54,
+                    activeIconHeaderColor: Colors.white,
+                    focusBorderTextFieldColor: Colors.white,
+                    cursorColor: Colors.white,
+                    textStyleTextField: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: Colors.white),
+                    tableBorderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12)),
+                    headerBorderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12)),
+                  ),
+                  configuration: SpargoTableConfig(
+                    emptyFilterBuilder: (context) {
+                      print('Buid');
+                      return Center(child: Text('empty'));
+                    },
+                    columns: [
+                      SpargoTableColumnConfig(
+                        name: 'Id',
+                        queryFilter: (query, model) =>
+                            model.id.toString().contains(query),
+                      ),
+                      SpargoTableColumnConfig(
+                          name: 'Name', sortBy: (_, __, ___) => 1),
+                      SpargoTableColumnConfig(
+                        name:
+                            'Value1 fadsf adsf adsf adsf dsaf adsf dsaf adsf ads fdsa fadsf adsf adsf ',
+                        queryFilter: (query, model) => true,
+                      ),
+                      SpargoTableColumnConfig(
+                        name: 'Value2',
+                        queryFilter: (query, model) => true,
+                      ),
+                      SpargoTableColumnConfig(name: 'Value3'),
+                      SpargoTableColumnConfig(name: 'Value4'),
+                      SpargoTableColumnConfig(name: 'Value5'),
+                      SpargoTableColumnConfig(name: 'Value6'),
+                    ],
+                    buildRow: (model) => [
+                      SpargoTableCellConfig(
+                          builder: (isSelected) => Text(
+                                model.id.toString(),
+                                style: !isSelected
+                                    ? null
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(color: Colors.red),
+                              )),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) => Text(model.name.toString())),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) =>
+                              Text(model.value1.toString())),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) =>
+                              Text(model.value2.toString())),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) =>
+                              Text(model.value3.toString())),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) =>
+                              Text(model.value4.toString())),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) =>
+                              Text(model.value5.toString())),
+                      SpargoTableCellConfig(
+                          builder: (isSelected) =>
+                              Text(model.value6.toString())),
+                    ],
+                  ),
+                ),
               SpargoTable<DemoModel>(
-                maxHeight: 472,
+                // maxHeight: 472,
                 data: data2,
-                onRowTap: (model) => setState(() => selectedRow2 == model ? selectedRow2 = null : selectedRow2 = model),
+                onRowTap: (model) => setState(() => selectedRow2 == model
+                    ? selectedRow2 = null
+                    : selectedRow2 = model),
                 selectedRow: selectedRow2,
                 // maxHeightSubWidget: 150,
                 // selectedRowSubWidgetBuilder: (model) => SpargoTable<DemoModel>(
@@ -165,15 +265,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 //     ],
                 //   ),
                 // ),
+                decorationConfiguration: SpargoTableDecorationConfig(
+                  colorRowsBetweenRows: true,
+                  colorEvenItems: const Color(0xFFDDE8FF),
+                  headerBackground: Colors.blue,
+                  borderTable: Border.all(width: 1, color: Colors.blue),
+                  iconHeaderColor: Colors.white54,
+                  activeIconHeaderColor: Colors.white,
+                  focusBorderTextFieldColor: Colors.white,
+                  cursorColor: Colors.white,
+                  textStyleTextField: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.white),
+                  tableBorderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                  headerBorderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                ),
                 configuration: SpargoTableConfig(
                   columns: [
                     SpargoTableColumnConfig(
                       name: 'Id',
-                      queryFilter: (query, model) => model.id.toString().contains(query),
+                      queryFilter: (query, model) =>
+                          model.id.toString().contains(query),
                     ),
-                    SpargoTableColumnConfig(name: 'Name', sortBy: (_, __, ___) => 1),
-                    SpargoTableColumnConfig(name: 'Value1'),
-                    SpargoTableColumnConfig(name: 'Value2'),
+                    SpargoTableColumnConfig(
+                        name: 'Name', sortBy: (_, __, ___) => 1),
+                    SpargoTableColumnConfig(
+                      name:
+                          'Value1 fadsf adsf adsf adsf dsaf adsf dsaf adsf ads fdsa fadsf adsf adsf ',
+                      queryFilter: (query, model) => true,
+                    ),
+                    SpargoTableColumnConfig(
+                      name: 'Value2',
+                      queryFilter: (query, model) => true,
+                    ),
                     SpargoTableColumnConfig(name: 'Value3'),
                     SpargoTableColumnConfig(name: 'Value4'),
                     SpargoTableColumnConfig(name: 'Value5'),
@@ -185,15 +314,25 @@ class _MyHomePageState extends State<MyHomePage> {
                               model.id.toString(),
                               style: !isSelected
                                   ? null
-                                  : Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.red),
+                                  : Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(color: Colors.red),
                             )),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.name.toString())),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value1.toString())),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value2.toString())),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value3.toString())),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value4.toString())),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value5.toString())),
-                    SpargoTableCellConfig(builder: (isSelected) => Text(model.value6.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.name.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.value1.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.value2.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.value3.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.value4.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.value5.toString())),
+                    SpargoTableCellConfig(
+                        builder: (isSelected) => Text(model.value6.toString())),
                   ],
                 ),
               ),
