@@ -25,9 +25,7 @@ class SpargoTableCellWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Flexible(
-                  child: _buildEllipsisChild(child),
-                ),
+                _buildEllipsisChild(child),
               ],
             ),
           ),
@@ -39,34 +37,38 @@ class SpargoTableCellWidget extends StatelessWidget {
 
 Widget _buildEllipsisChild(Widget child) {
   if (child is Text) {
-    return Text(
-      child.data ?? '',
-      style: child.style,
-      textAlign: child.textAlign,
-      textDirection: child.textDirection,
-      locale: child.locale,
-      softWrap: false,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-      textScaler: child.textScaler,
-      semanticsLabel: child.semanticsLabel,
-      strutStyle: child.strutStyle,
-      textWidthBasis: TextWidthBasis.parent,
-      textHeightBehavior: child.textHeightBehavior,
+    return Flexible(
+      child: Text(
+        child.data ?? '',
+        style: child.style,
+        textAlign: child.textAlign,
+        textDirection: child.textDirection,
+        locale: child.locale,
+        softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        textScaler: child.textScaler,
+        semanticsLabel: child.semanticsLabel,
+        strutStyle: child.strutStyle,
+        textWidthBasis: TextWidthBasis.parent,
+        textHeightBehavior: child.textHeightBehavior,
+      ),
     );
   }
   if (child is RichText) {
-    return RichText(
-      text: child.text,
-      textAlign: child.textAlign,
-      textDirection: child.textDirection,
-      softWrap: false,
-      overflow: TextOverflow.ellipsis,
-      maxLines: 1,
-      textScaler: child.textScaler,
-      strutStyle: child.strutStyle,
-      textWidthBasis: child.textWidthBasis,
-      textHeightBehavior: child.textHeightBehavior,
+    return Flexible(
+      child: RichText(
+        text: child.text,
+        textAlign: child.textAlign,
+        textDirection: child.textDirection,
+        softWrap: false,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        textScaler: child.textScaler,
+        strutStyle: child.strutStyle,
+        textWidthBasis: child.textWidthBasis,
+        textHeightBehavior: child.textHeightBehavior,
+      ),
     );
   }
   return child;
