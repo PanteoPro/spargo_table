@@ -1,3 +1,6 @@
+## 0.0.19
+* Add override Overflow for Text And RichText widgets
+
 ## 0.0.18
 * Added new builder emptyFilterBuilder
 
