@@ -25,7 +25,10 @@ class SpargoTableCellWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _buildEllipsisChild(child),
+                if (child is Text || child is RichText)
+                  _buildEllipsisChild(child)
+                else
+                  child,
               ],
             ),
           ),
