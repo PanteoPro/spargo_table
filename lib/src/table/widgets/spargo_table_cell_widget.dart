@@ -55,5 +55,19 @@ Widget _buildEllipsisChild(Widget child) {
       textHeightBehavior: child.textHeightBehavior,
     );
   }
+  if (child is RichText) {
+    return RichText(
+      text: child.text,
+      textAlign: child.textAlign,
+      textDirection: child.textDirection,
+      softWrap: false,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      textScaler: child.textScaler,
+      strutStyle: child.strutStyle,
+      textWidthBasis: child.textWidthBasis,
+      textHeightBehavior: child.textHeightBehavior,
+    );
+  }
   return child;
 }
