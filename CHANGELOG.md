@@ -1,3 +1,6 @@
+## 0.0.20
+* Added functionality for dynamic column count changes
+
 ## 0.0.19
 * Add override Overflow for Text And RichText widgets
 

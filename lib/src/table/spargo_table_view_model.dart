@@ -24,8 +24,8 @@ class SpargoTableViewModel<T> {
 
   final IWebUtils webUtils;
 
-  final SpargoTableConfig<T> configuration;
-  final SpargoTableDecorationConfig decorationConfiguration;
+  SpargoTableConfig<T> configuration;
+  SpargoTableDecorationConfig decorationConfiguration;
   List<T> data;
   T? selectedRow;
   int? selectedRowIndex;
@@ -79,11 +79,7 @@ class SpargoTableViewModel<T> {
     isDisplayedHorizontalScrollNotifier.dispose();
   }
 
-  void init(SpargoTable<T> widget) {
-    if (kIsWeb) {
-      webUtils.preventBrowserDrag();
-    }
-
+  void _calculateColumnWidths() {
     final columnWidths = <double>[];
     for (int i = 0; i < configuration.columns.length; i++) {
       columnWidths.add(configuration.columns[i].width);
@@ -92,6 +88,14 @@ class SpargoTableViewModel<T> {
       }
     }
     columnWidthsNotifier.value = columnWidths;
+  }
+
+  void init(SpargoTable<T> widget) {
+    if (kIsWeb) {
+      webUtils.preventBrowserDrag();
+    }
+
+    _calculateColumnWidths();
     _calculateSelectedRowIndex();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -106,6 +110,12 @@ class SpargoTableViewModel<T> {
 
   void didUpdateWidget(SpargoTable<T> widget, SpargoTable<T> oldWidget) {
     this.data = widget.data;
+    this.configuration = widget.configuration;
+    this.decorationConfiguration = widget.decorationConfiguration;
+    if (widget.configuration.columns.length !=
+        oldWidget.configuration.columns.length) {
+      _calculateColumnWidths();
+    }
     selectedRow = widget.selectedRow;
     if (widget.selectedRow != oldWidget.selectedRow) {
       _calculateSelectedRowIndex();
