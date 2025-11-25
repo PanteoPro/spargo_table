@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:spargo_table/src/table/web_utils/i_web_utils.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:spargo_table/src/table/config/spargo_table_config.dart';
 import 'package:spargo_table/src/table/config/spargo_table_decoration_config.dart';
 import 'package:spargo_table/src/table/models/spargo_sort_model.dart';
 import 'package:spargo_table/src/table/spargo_table.dart';
+import 'package:spargo_table/src/table/web_utils/i_web_utils.dart';
 
 class SpargoTableViewModel<T> {
   SpargoTableViewModel({
@@ -255,7 +255,11 @@ class SpargoTableViewModel<T> {
           left: 4000,
           child: Material(
               child: SizedBox(
-                  key: key, child: selectedRowSubWidgetBuilder(model))),
+                  key: key,
+                  child: selectedRowSubWidgetBuilder(
+                    model,
+                    maxWidthNotifier.value ?? 0,
+                  ))),
         );
       },
     );

@@ -1,3 +1,7 @@
+## 0.0.22
+
+- Fix previous version
+
 ## 0.0.21
 
 - Added maxWidth inn selectedRowSubWidgetBuilder

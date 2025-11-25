@@ -129,7 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     : selectedRow2 = model),
                 selectedRow: selectedRow2,
                 maxHeightSubWidget: 200,
-                selectedRowSubWidgetBuilder: (model) => SizedBox(
+                selectedRowSubWidgetBuilder: (model, maxWidth) => Container(
+                  color: Colors.red,
+                  width: 0,
                   height: 200,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -137,10 +139,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       Expanded(
                         child: Row(
                           children: [
-                            Text(
-                              "Test Title",
+                            Expanded(
+                              child: Text(
+                                "Test Title",
+                              ),
                             ),
-                            // Expanded(child: Text("REsponse")),
+                            Expanded(child: Text("REsponse")),
                           ],
                         ),
                       )
