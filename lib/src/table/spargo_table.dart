@@ -2,17 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:spargo_table/src/table/spargo_table_view_model_provider.dart';
 import 'package:spargo_table/src/table/config/spargo_table_config.dart';
 import 'package:spargo_table/src/table/config/spargo_table_decoration_config.dart';
 import 'package:spargo_table/src/table/spargo_table_view_model.dart';
+import 'package:spargo_table/src/table/spargo_table_view_model_provider.dart';
+import 'package:spargo_table/src/table/web_utils/i_web_utils.dart'
+    if (dart.library.js) 'package:spargo_table/src/table/web_utils/web_utils.dart';
 import 'package:spargo_table/src/table/widgets/spargo_table_header_widget.dart';
 import 'package:spargo_table/src/table/widgets/spargo_table_row_widget.dart';
 
-import 'package:spargo_table/src/table/web_utils/i_web_utils.dart'
-    if (dart.library.js) 'package:spargo_table/src/table/web_utils/web_utils.dart';
-
-typedef SubRowWidget<T> = Widget Function(T model);
+typedef SubRowWidget<T> = Widget Function(T model, double maxWidth);
 
 class SpargoTable<T> extends StatefulWidget {
   const SpargoTable({
@@ -315,9 +314,12 @@ class _ContentWidget<T> extends StatefulWidget {
 
 class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
   final GlobalKey _key = GlobalKey();
+  double? _sumColumnWidths;
+
   @override
   void initState() {
     super.initState();
+    _sumColumnWidths = widget.columnWidths.reduce((a, b) => a + b);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final renderBoxRow =
           _key.currentContext?.findRenderObject() as RenderBox?;
@@ -325,6 +327,12 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
         widget.buildSizeCallback(renderBoxRow.size);
       }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant _ContentWidget<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _sumColumnWidths = widget.columnWidths.reduce((a, b) => a + b);
   }
 
   Color? getColor(int adjustedIndex) {
@@ -408,7 +416,8 @@ class _ContentWidgetState<T> extends State<_ContentWidget<T>> {
                         widget.selectedRowSubWidgetBuilder != null) ...[
                       SliverToBoxAdapter(
                         child: widget.selectedRowSubWidgetBuilder!(
-                            widget.dataForRender[widget.selectedRowIndex!]),
+                            widget.dataForRender[widget.selectedRowIndex!],
+                            _sumColumnWidths ?? 0),
                       ),
                       if (widget.selectedRowIndex != itemsCount - 1)
                         SliverFixedExtentList(

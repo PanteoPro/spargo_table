@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-
 import 'package:spargo_table/spargo_table.dart';
 
 void main() {
@@ -129,6 +128,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     ? selectedRow2 = null
                     : selectedRow2 = model),
                 selectedRow: selectedRow2,
+                maxHeightSubWidget: 200,
+                selectedRowSubWidgetBuilder: (model) => SizedBox(
+                  height: 200,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Text(
+                              "Test Title",
+                            ),
+                            // Expanded(child: Text("REsponse")),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
 
                 decorationConfiguration: SpargoTableDecorationConfig(
                   colorRowsBetweenRows: true,
