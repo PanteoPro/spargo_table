@@ -8,12 +8,15 @@ class SpargoTableColumnConfig<T> {
     this.sortBy,
     this.width = 250,
     this.queryFilter,
+    this.textAlign,
   });
+
   final String name;
   final TextStyle? style;
   final double width;
   final bool Function(String query, T model)? queryFilter;
   final int Function(T modelA, T modelB, SpargoSortType type)? sortBy;
+  final TextAlign? textAlign;
 
   SpargoTableColumnConfig<T> copyWith({
     String? name,

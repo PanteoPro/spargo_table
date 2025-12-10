@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SpargoTableCellWidget extends StatelessWidget {
-  const SpargoTableCellWidget(
-      {super.key, required this.width, required this.child});
+  const SpargoTableCellWidget({
+    super.key,
+    required this.width,
+    required this.child,
+    this.alignment,
+  });
 
   final double width;
   final Widget child;
+  final MainAxisAlignment? alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,7 @@ class SpargoTableCellWidget extends StatelessWidget {
           ),
           child: ClipRect(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: alignment ?? MainAxisAlignment.start,
               children: [
                 if (child is Text || child is RichText)
                   _buildEllipsisChild(child)

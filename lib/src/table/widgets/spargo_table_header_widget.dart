@@ -172,7 +172,7 @@ class _CellWidgetState<T> extends State<_CellWidget<T>> {
               .bodyMedium
               ?.copyWith(fontWeight: FontWeight.bold),
       maxLines: 3,
-      textAlign: TextAlign.start,
+      textAlign: widget.config.textAlign ?? TextAlign.start,
     );
     Widget? interactiveWidget;
     if (widget.config.queryFilter != null) {
