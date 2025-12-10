@@ -1,3 +1,7 @@
+## 0.0.23
+
+- Added header text alignment configuration and the ability to change the mainAxisAlignment of the widget
+
 ## 0.0.22
 
 - Fix previous version
